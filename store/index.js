@@ -6,9 +6,18 @@ export const state = () => ({
   initialized: false,
   emissions: [],
   nextToken: null,
-  recent: null,
-  elapsed: null,
 })
+
+export const getters = {
+  recent(state) {
+    return state.emissions.length > 0 ? Math.max(...state.emissions) : null
+  },
+  elapsed(_, getters) {
+    return getters.recent
+      ? Math.floor((Date.now() / 1000 - getters.recent) / (60 * 60 * 24))
+      : null
+  },
+}
 
 export const mutations = {
   initialized(state) {
@@ -16,10 +25,6 @@ export const mutations = {
   },
   addEmissions(state, emissions) {
     state.emissions = [...state.emissions, ...emissions]
-    state.recent = Math.max(...state.emissions)
-    state.elapsed = Math.floor(
-      (Date.now() / 1000 - state.recent) / (60 * 60 * 24)
-    )
   },
   setNextToken(state, nextToken) {
     state.nextToken = nextToken

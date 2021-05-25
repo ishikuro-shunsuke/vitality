@@ -1,21 +1,36 @@
 <template>
-  <v-sparkline
-    :value="value.reverse()"
-    :gradient="gradient"
-    :smooth="radius || false"
-    :padding="padding"
-    :line-width="width"
-    :stroke-linecap="lineCap"
-    :gradient-direction="gradientDirection"
-    :fill="fill"
-    :type="type"
-    :auto-line-width="autoLineWidth"
-    :show-labels="true"
-    auto-draw
-  ></v-sparkline>
+  <v-container class="text-center">
+    <v-progress-circular
+      v-if="!initialized"
+      :size="200"
+      indeterminate
+      color="primary"
+    ></v-progress-circular>
+    <v-sparkline
+      v-else
+      :value="value.reverse()"
+      :gradient="gradient"
+      :smooth="radius || false"
+      :padding="padding"
+      :line-width="width"
+      :stroke-linecap="lineCap"
+      :gradient-direction="gradientDirection"
+      :fill="fill"
+      :type="type"
+      :auto-line-width="autoLineWidth"
+      :show-labels="true"
+      auto-draw
+    >
+      <template #label="emission">
+        {{ emission.value * -1 }}
+      </template>
+    </v-sparkline>
+  </v-container>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex'
+
 const gradients = [
   ['#222'],
   ['#42b3f4'],
@@ -33,25 +48,29 @@ export default {
     radius: 10,
     padding: 8,
     lineCap: 'round',
-    gradient: gradients[5],
-    gradientDirection: 'top',
+    gradientDirection: 'bottom',
     gradients,
     fill: false,
     type: 'trend',
     autoLineWidth: false,
   }),
   computed: {
+    gradient() {
+      return this.elapsed >= 7 ? ['#1feaea'] : gradients[5]
+    },
     value() {
-      return this.$store.state.emissions.reduce((histgram, epochTime) => {
+      return this.emissions.reduce((histgram, epochTime) => {
         const elapsed = Math.floor(
           (Date.now() / 1000 - epochTime) / (60 * 60 * 24)
         )
         if (elapsed >= 0 && elapsed < TRACKING_DAYS) {
-          histgram[elapsed]++
+          histgram[elapsed]--
         }
         return histgram
       }, Array(TRACKING_DAYS).fill(0))
     },
+    ...mapState(['emissions', 'initialized']),
+    ...mapGetters(['elapsed']),
   },
 }
 </script>

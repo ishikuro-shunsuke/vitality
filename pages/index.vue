@@ -1,60 +1,35 @@
 <template>
-  <div>
-    <v-progress-circular
-      v-if="!initialized"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <span v-if="isNaN(elapsed)">No data</span>
-    <span v-else>{{ elapsed }} days</span>
-
-    <v-dialog v-model="dialog" class="mx-auto" max-width="200">
-      <template #activator="{ on, attrs }">
-        <v-btn v-bind="attrs" v-on="on">emit</v-btn>
-      </template>
-
-      <v-card>
-        <v-card-title>Emitted?</v-card-title>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn
-            @click="
-              dialog = false
-              emit()
-            "
-          >
-            yes
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <Progress></Progress>
-
-    <Graph></Graph>
-  </div>
+  <v-container>
+    <v-row>
+      <h1>Vitality</h1>
+    </v-row>
+    <v-row class="d-fflex justify-center">
+      <Progress></Progress>
+    </v-row>
+    <v-row class="mt-10">
+      <h3>Past week</h3>
+      <Graph></Graph>
+    </v-row>
+    <v-row class="mt-10">
+      <h3>Past emissions</h3>
+      <History></History>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   components: true,
-  data() {
-    return {
-      dialog: false,
-    }
-  },
   computed: {
-    ...mapState(['initialized', 'elapsed']),
+    ...mapState(['initialized', 'emissions']),
+    ...mapGetters(['elapsed']),
   },
   created() {
     this.$store.dispatch('initialize')
   },
   methods: {
-    emit() {
-      this.$store.dispatch('emit')
-    },
     fetchNextPage() {
       this.$store.dispatch('fetchNextPage')
     },
