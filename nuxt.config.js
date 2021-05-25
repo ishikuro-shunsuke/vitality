@@ -38,6 +38,7 @@ export default {
     '@nuxtjs/eslint-module',
     // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
+    '@nuxtjs/pwa',
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
@@ -64,4 +65,13 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},
+
+  // @nuxtjs/pwa
+  pwa: {
+    manifest: {
+      name: 'Vitality',
+      short_name: 'Vitality',
+      background_color: '#121212',
+    },
+  },
 }
