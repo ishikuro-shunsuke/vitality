@@ -36,7 +36,8 @@ export default {
           display: false,
         },
         scales: {
-          yAxes: [{ ticks: { min: 0 }, display: false }],
+          yAxes: [{ ticks: { min: 300 }, display: false }],
+          xAxes: [{ display: false }],
         },
       },
     }
@@ -55,9 +56,9 @@ export default {
         datasets: [
           {
             data: dataset,
-            borderColor: colors.blue.darken4,
+            borderColor: colors.grey.darken3,
             backgroundColor: colors.grey.darken4,
-            fill: true,
+            fill: false,
           },
           {
             data: this.currentLevel,

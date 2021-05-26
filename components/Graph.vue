@@ -30,6 +30,7 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import colors from 'vuetify/es5/util/colors'
 
 const gradients = [
   ['#222'],
@@ -37,7 +38,7 @@ const gradients = [
   ['red', 'orange', 'yellow'],
   ['purple', 'violet'],
   ['#00c6ff', '#F0F', '#FF0'],
-  ['#f72047', '#ffd200', '#1feaea'],
+  ['#f72047', '#ffd200', colors.blue.base],
 ]
 
 const TRACKING_DAYS = 7
@@ -56,7 +57,7 @@ export default {
   }),
   computed: {
     gradient() {
-      return this.elapsed >= 7 ? ['#1feaea'] : gradients[5]
+      return this.elapsed >= 7 ? [colors.blue.base] : gradients[5]
     },
     value() {
       return this.emissions.reduce((histgram, epochTime) => {
