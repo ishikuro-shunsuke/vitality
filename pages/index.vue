@@ -24,9 +24,13 @@
 
 <script>
 import { mapState, mapGetters } from 'vuex'
+import Progress from '../components/Progress'
+import Chart from '../components/Chart'
+import Graph from '../components/Graph'
+import History from '../components/History'
 
 export default {
-  components: true,
+  components: [Progress, Chart, Graph, History],
   computed: {
     ...mapState(['initialized', 'emissions']),
     ...mapGetters(['elapsed']),

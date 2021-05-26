@@ -64,7 +64,6 @@ export default {
         },
       },
     },
-    treeShake: false,
   },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
