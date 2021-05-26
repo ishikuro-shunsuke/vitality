@@ -4,19 +4,21 @@
       <h1>Vitality</h1>
     </v-row>
     <v-row>
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="6" class="pl-0 pr-0">
+        <h2>Progress</h2>
         <Progress></Progress>
       </v-col>
-      <v-col cols="12" md="6">
+      <v-col cols="12" md="6" class="pl-0 pr-0">
+        <h2>Testosterone level</h2>
         <Chart></Chart>
       </v-col>
     </v-row>
     <v-row>
-      <h3>Past week</h3>
+      <h2>Past week</h2>
       <Graph></Graph>
     </v-row>
     <v-row>
-      <h3>Past emissions</h3>
+      <h2>Past emissions</h2>
       <History></History>
     </v-row>
   </v-container>
@@ -45,3 +47,10 @@ export default {
   },
 }
 </script>
+
+<style lang="sass">
+@import '~vuetify/src/styles/styles.sass'
+
+h2
+  color: #{map-get($grey, 'darken-1')}
+</style>
