@@ -24,8 +24,14 @@ export default {
   data() {
     return {
       options: {
-        responsive: false,
-        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 35,
+            right: 35,
+            top: 0,
+            bottom: 0,
+          },
+        },
         legend: {
           display: false,
         },
