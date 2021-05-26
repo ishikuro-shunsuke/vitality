@@ -1,5 +1,5 @@
 <template>
-  <v-container class="text-center">
+  <v-container>
     <v-progress-circular
       v-if="!initialized"
       :size="200"

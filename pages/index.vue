@@ -3,14 +3,19 @@
     <v-row>
       <h1>Vitality</h1>
     </v-row>
-    <v-row class="d-fflex justify-center">
-      <Progress></Progress>
+    <v-row>
+      <v-col cols="12" md="6">
+        <Progress></Progress>
+      </v-col>
+      <v-col cols="12" md="6">
+        <Chart></Chart>
+      </v-col>
     </v-row>
-    <v-row class="mt-10">
+    <v-row>
       <h3>Past week</h3>
       <Graph></Graph>
     </v-row>
-    <v-row class="mt-10">
+    <v-row>
       <h3>Past emissions</h3>
       <History></History>
     </v-row>

@@ -1,5 +1,5 @@
 <template>
-  <v-container class="text-center">
+  <v-container class="d-flex justify-center">
     <v-progress-circular
       :rotate="-90"
       :size="350"

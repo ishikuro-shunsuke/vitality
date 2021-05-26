@@ -1,13 +1,13 @@
 <template>
-  <v-container class="text-center">
+  <v-container>
     <v-progress-circular
       v-if="!initialized"
       :size="200"
       indeterminate
       color="primary"
     ></v-progress-circular>
-    <v-row v-else justify="center">
-      <v-col v-for="month in calendar" :key="month.label" cols="auto">
+    <v-row v-else>
+      <v-col v-for="month in calendar" :key="month.label">
         <v-card color="transparent" width="100">
           <v-progress-circular
             :rotate="-90"
@@ -18,11 +18,10 @@
           >
             {{ month.count }}
           </v-progress-circular>
-          <p>{{ month.label }}</p>
+          <p class="text-center">{{ month.label }}</p>
         </v-card>
       </v-col>
     </v-row>
-    <p>{{ debug }}</p>
   </v-container>
 </template>
 
@@ -33,7 +32,6 @@ export default {
   data() {
     return {
       calendar: [],
-      debug: null,
     }
   },
   computed: {
