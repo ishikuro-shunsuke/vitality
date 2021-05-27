@@ -36,7 +36,7 @@ export default {
           display: false,
         },
         scales: {
-          yAxes: [{ ticks: { min: 300 }, display: false }],
+          yAxes: [{ ticks: { max: 580 }, display: false }],
           xAxes: [{ display: false }],
         },
       },
