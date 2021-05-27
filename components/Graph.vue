@@ -61,9 +61,10 @@ export default {
     },
     value() {
       return this.emissions.reduce((histgram, epochTime) => {
-        const elapsed = Math.floor(
-          (Date.now() / 1000 - epochTime) / (60 * 60 * 24)
-        )
+        const now = new Date()
+        const today =
+          new Date(now.getFullYear(), now.getMonth(), now.getDate()) / 1000
+        const elapsed = Math.floor((today - epochTime) / (60 * 60 * 24))
         if (elapsed >= 0 && elapsed < TRACKING_DAYS) {
           histgram[elapsed]--
         }

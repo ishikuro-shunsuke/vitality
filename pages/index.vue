@@ -32,7 +32,7 @@ import Graph from '../components/Graph'
 import History from '../components/History'
 
 export default {
-  components: [Progress, Chart, Graph, History],
+  components: { Progress, Chart, Graph, History },
   computed: {
     ...mapState(['initialized', 'emissions']),
     ...mapGetters(['elapsed']),
