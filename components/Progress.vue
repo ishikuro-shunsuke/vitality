@@ -6,7 +6,7 @@
         :size="350"
         :width="80"
         :value="value"
-        :color="elapsed <= 7 ? 'primary' : 'red'"
+        :color="elapsed <= 7 ? 'primary' : 'warning'"
       >
         <v-dialog v-model="dialog" class="mx-auto" max-width="200">
           <template #activator="{ on, attrs }">

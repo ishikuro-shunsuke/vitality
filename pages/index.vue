@@ -4,11 +4,14 @@
       <h1>Vitality</h1>
     </v-row>
     <v-row>
-      <v-col cols="12" md="6" class="pl-0 pr-0">
+      <v-col cols="12" md="4">
+        <v-img src="/rat.png" />
+      </v-col>
+      <v-col cols="12" md="4" class="pl-0 pr-0">
         <h2>Progress</h2>
         <Progress></Progress>
       </v-col>
-      <v-col cols="12" md="6" class="pl-0 pr-0">
+      <v-col cols="12" md="4" class="pl-0 pr-0">
         <h2>Testosterone level</h2>
         <Chart></Chart>
       </v-col>

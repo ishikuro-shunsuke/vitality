@@ -14,7 +14,13 @@
             :size="100"
             :width="20"
             :value="(month.count / 5.0) * 100"
-            :color="month.count > 5 ? 'red' : 'primary'"
+            :color="
+              month.count > 5
+                ? 'error'
+                : month.count === 4
+                ? 'warning'
+                : 'primary'
+            "
           >
             {{ month.count }}
           </v-progress-circular>

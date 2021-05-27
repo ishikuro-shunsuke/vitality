@@ -19,6 +19,7 @@
       :type="type"
       :auto-line-width="autoLineWidth"
       :show-labels="true"
+      color="accent"
       auto-draw
     >
       <template #label="emission">
@@ -32,15 +33,6 @@
 import { mapState, mapGetters } from 'vuex'
 import colors from 'vuetify/es5/util/colors'
 
-const gradients = [
-  ['#222'],
-  ['#42b3f4'],
-  ['red', 'orange', 'yellow'],
-  ['purple', 'violet'],
-  ['#00c6ff', '#F0F', '#FF0'],
-  ['#f72047', '#ffd200', colors.blue.base],
-]
-
 const TRACKING_DAYS = 7
 
 export default {
@@ -50,14 +42,18 @@ export default {
     padding: 8,
     lineCap: 'round',
     gradientDirection: 'bottom',
-    gradients,
     fill: false,
     type: 'trend',
     autoLineWidth: false,
   }),
   computed: {
     gradient() {
-      return this.elapsed >= 7 ? [colors.blue.base] : gradients[5]
+      const defaultTheme = [
+        this.$vuetify.theme.themes.dark.error,
+        colors.grey.darken4,
+        colors.blue.base,
+      ]
+      return this.elapsed >= 7 ? [colors.blue.base] : defaultTheme
     },
     value() {
       return this.emissions.reduce((histgram, epochTime) => {
