@@ -7,24 +7,28 @@
       color="primary"
     ></v-progress-circular>
     <v-row v-else>
-      <v-col v-for="month in calendar" :key="month.label">
-        <v-card color="transparent" width="100">
-          <v-progress-circular
-            :rotate="-90"
-            :size="100"
-            :width="20"
-            :value="(month.count / 5.0) * 100"
-            :color="
-              month.count > 5
-                ? 'error'
-                : month.count === 4
-                ? 'warning'
-                : 'primary'
-            "
-          >
-            {{ month.count }}
-          </v-progress-circular>
-          <p class="text-center">{{ month.label }}</p>
+      <v-col v-for="month in calendar" :key="month.label" cols="12" xs="3">
+        <v-card color="transparent" flat max-width="120">
+          <v-card-subtitle class="text-center pb-1">
+            {{ month.label }}
+          </v-card-subtitle>
+          <v-card-text>
+            <v-progress-circular
+              :rotate="-90"
+              :size="88"
+              :width="20"
+              :value="(month.count / 5.0) * 100"
+              :color="
+                month.count > 5
+                  ? 'error'
+                  : month.count === 4
+                  ? 'warning'
+                  : 'primary'
+              "
+            >
+              {{ month.count }}
+            </v-progress-circular>
+          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
