@@ -56,16 +56,19 @@ export default {
       return this.elapsed >= 7 ? [colors.blue.base] : defaultTheme
     },
     value() {
-      return this.emissions.reduce((histgram, epochTime) => {
-        const now = new Date()
-        const today =
-          new Date(now.getFullYear(), now.getMonth(), now.getDate()) / 1000
-        const elapsed = Math.floor((today - epochTime) / (60 * 60 * 24))
-        if (elapsed >= 0 && elapsed < TRACKING_DAYS) {
-          histgram[elapsed]--
-        }
-        return histgram
-      }, Array(TRACKING_DAYS).fill(0))
+      const secondsInDay = 60 * 60 * 24
+      const now = new Date()
+      const tomorrow =
+        new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) / 1000
+      return this.emissions
+        .filter((v) => v > tomorrow - secondsInDay * TRACKING_DAYS)
+        .reduce((histgram, epochTime) => {
+          const elapsed = Math.floor((tomorrow - epochTime) / secondsInDay)
+          if (elapsed >= 0 && elapsed < TRACKING_DAYS) {
+            histgram[elapsed]--
+          }
+          return histgram
+        }, Array(TRACKING_DAYS).fill(0))
     },
     ...mapState(['emissions', 'initialized']),
     ...mapGetters(['elapsed']),
