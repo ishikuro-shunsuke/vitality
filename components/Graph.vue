@@ -33,7 +33,7 @@
 import { mapState, mapGetters } from 'vuex'
 import colors from 'vuetify/es5/util/colors'
 
-const TRACKING_DAYS = 7
+const TRACKING_DAYS = 30
 
 export default {
   data: () => ({

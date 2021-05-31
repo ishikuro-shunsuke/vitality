@@ -17,7 +17,7 @@
       </v-col>
     </v-row>
     <v-row>
-      <h2>Past week</h2>
+      <h2>Past 30 days</h2>
       <Graph></Graph>
     </v-row>
     <v-row>
