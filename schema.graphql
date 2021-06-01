@@ -1,17 +1,21 @@
 ﻿schema {
-  query: VitalityQuery
-  mutation: VitalityMutation
+  query: Query
+  mutation: Mutation
 }
 
-type PaginatedEmissions {
+type Emissions {
   history: [AWSTimestamp!]!
-  nextToken: String
 }
 
-type VitalityMutation {
+type Mutation {
   emit(profile: String): AWSTimestamp!
 }
 
-type VitalityQuery {
-  emission(count: String, nextToken: String, profile: String): PaginatedEmissions!
+type Query {
+  emission(profile: String): Emissions!
+  settings(profile: String): User!
+}
+
+type User {
+  profile: String!
 }
