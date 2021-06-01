@@ -7,7 +7,13 @@
       color="primary"
     ></v-progress-circular>
     <v-row v-else>
-      <v-col v-for="month in calendar" :key="month.label" cols="12" xs="3">
+      <v-col
+        v-for="month in calendar"
+        :key="month.label"
+        cols="4"
+        md="2"
+        lg="1"
+      >
         <v-card color="transparent" flat max-width="120">
           <v-card-subtitle class="text-center pb-1">
             {{ month.label }}
