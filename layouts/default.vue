@@ -2,6 +2,22 @@
   <v-app dark>
     <v-main>
       <v-container>
+        <v-row>
+          <h1>Vitality</h1>
+        </v-row>
+        <v-row>
+          <h2>Progress</h2>
+        </v-row>
+        <v-row>
+          <v-col cols="12" md="4" class="pl-0 pr-0">
+            <VitalityProgress></VitalityProgress>
+          </v-col>
+        </v-row>
+        <v-tabs v-model="tab" grow :color="color">
+          <v-tab nuxt to="/">Vitality</v-tab>
+          <v-tab nuxt to="/meditation" disabled>Meditation</v-tab>
+          <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
+        </v-tabs>
         <nuxt />
       </v-container>
     </v-main>
@@ -9,9 +25,15 @@
 </template>
 
 <script>
+import VitalityProgress from '../components/vitality/Progress'
+
 export default {
+  components: {
+    VitalityProgress,
+  },
   data() {
     return {
+      tab: null,
       clipped: false,
       drawer: false,
       fixed: false,
@@ -33,5 +55,23 @@ export default {
       title: 'Vuetify.js',
     }
   },
+  computed: {
+    color() {
+      return this.tab === '/'
+        ? 'primary'
+        : this.tab === '/meditation'
+        ? 'green'
+        : this.tab === '/exercise'
+        ? 'orange'
+        : ''
+    },
+  },
 }
 </script>
+
+<style lang="sass">
+@import '~vuetify/src/styles/styles.sass'
+
+h2
+  color: #{map-get($grey, 'darken-1')}
+</style>
