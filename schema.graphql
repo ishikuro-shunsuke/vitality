@@ -9,6 +9,7 @@ type Emissions {
 
 type Mutation {
   emit(profile: String): AWSTimestamp!
+  saveTogglSettings(input: TogglInput!, profile: String): Toggl
 }
 
 type Query {
@@ -16,6 +17,19 @@ type Query {
   settings(profile: String): User!
 }
 
+type Toggl {
+  apiKey: String
+  projectId: Int
+  workspaceId: Int
+}
+
 type User {
   profile: String!
+  toggl: Toggl
+}
+
+input TogglInput {
+  apiKey: String!
+  projectId: Int!
+  workspaceId: Int!
 }
