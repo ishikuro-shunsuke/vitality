@@ -9,44 +9,39 @@
       </v-col>
       <v-col cols="12" md="4" class="pl-0 pr-0">
         <h2>Progress</h2>
-        <Progress></Progress>
+        <VitalityProgress></VitalityProgress>
       </v-col>
       <v-col cols="12" md="4" class="pl-0 pr-0">
         <h2>Testosterone level</h2>
-        <Chart></Chart>
+        <VitalityChart></VitalityChart>
       </v-col>
     </v-row>
     <v-row>
       <h2>Past 30 days</h2>
-      <Graph></Graph>
+      <VitalityGraph></VitalityGraph>
     </v-row>
     <v-row>
       <h2>Past emissions</h2>
-      <History></History>
+      <VitalityHistory></VitalityHistory>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
-import Progress from '../components/Progress'
-import Chart from '../components/Chart'
-import Graph from '../components/Graph'
-import History from '../components/History'
+import VitalityProgress from '../components/vitality/Progress'
+import VitalityChart from '../components/vitality/Chart'
+import VitalityGraph from '../components/vitality/Graph'
+import VitalityHistory from '../components/vitality/History'
 
 export default {
-  components: { Progress, Chart, Graph, History },
-  computed: {
-    ...mapState(['initialized', 'emissions']),
-    ...mapGetters(['elapsed']),
+  components: {
+    VitalityProgress,
+    VitalityChart,
+    VitalityGraph,
+    VitalityHistory,
   },
   created() {
     this.$store.dispatch('initialize')
-  },
-  methods: {
-    fetchNextPage() {
-      this.$store.dispatch('fetchNextPage')
-    },
   },
 }
 </script>

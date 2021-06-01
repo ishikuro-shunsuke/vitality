@@ -70,8 +70,8 @@ export default {
           return histgram
         }, Array(TRACKING_DAYS).fill(0))
     },
-    ...mapState(['emissions', 'initialized']),
-    ...mapGetters(['elapsed']),
+    ...mapState('vitality', ['emissions', 'initialized']),
+    ...mapGetters('vitality', ['elapsed']),
   },
 }
 </script>

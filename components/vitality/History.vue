@@ -45,7 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(['initialized', 'emissions']),
+    ...mapState('vitality', ['initialized', 'emissions']),
   },
   watch: {
     initialized(newValue, oldValue) {
@@ -80,8 +80,6 @@ export default {
       if (oldestMonth < target) {
         return
       }
-      // eslint-disable-next-line no-console
-      console.log(target)
       let i = 1
       while (
         new Date(oldestMonth.getFullYear(), oldestMonth.getMonth() - i + 1) >

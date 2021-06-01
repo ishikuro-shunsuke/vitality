@@ -70,7 +70,7 @@ export default {
         ],
       }
     },
-    ...mapGetters(['elapsed']),
+    ...mapGetters('vitality', ['elapsed']),
   },
 }
 </script>

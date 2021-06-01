@@ -48,12 +48,12 @@ export default {
     value() {
       return (this.elapsed / 7.0) * 100
     },
-    ...mapState(['initialized']),
-    ...mapGetters(['elapsed']),
+    ...mapState('vitality', ['initialized']),
+    ...mapGetters('vitality', ['elapsed']),
   },
   methods: {
     emit() {
-      this.$store.dispatch('emit')
+      this.$store.dispatch('vitality/emit')
     },
   },
 }
