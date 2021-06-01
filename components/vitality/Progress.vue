@@ -8,29 +8,9 @@
         :value="value"
         :color="elapsed <= 7 ? 'primary' : 'warning'"
       >
-        <v-dialog v-model="dialog" class="mx-auto" max-width="200">
-          <template #activator="{ on, attrs }">
-            <v-btn x-large block v-bind="attrs" v-on="on">emit</v-btn>
-          </template>
-          <v-card>
-            <v-card-title>Emitted?</v-card-title>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                @click="
-                  dialog = false
-                  emit()
-                "
-              >
-                yes
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        {{ elapsed }}/7
+        <v-icon color="primary" x-large>mdi-battery-plus</v-icon>
       </v-progress-circular>
-    </v-row>
-    <v-row class="d-flex justify-center mt-7">
-      <v-chip outlined large>{{ elapsed }}/7</v-chip>
     </v-row>
   </v-container>
 </template>

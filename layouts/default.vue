@@ -6,19 +6,18 @@
           <h1>Vitality</h1>
         </v-row>
         <v-row>
-          <h2>Progress</h2>
-        </v-row>
-        <v-row>
           <v-col cols="12" md="4" class="pl-0 pr-0">
             <VitalityProgress></VitalityProgress>
           </v-col>
         </v-row>
-        <v-tabs v-model="tab" grow :color="color">
-          <v-tab nuxt to="/">Vitality</v-tab>
-          <v-tab nuxt to="/meditation" disabled>Meditation</v-tab>
-          <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
-        </v-tabs>
-        <nuxt />
+        <v-row>
+          <v-tabs v-model="tab" grow :color="color">
+            <v-tab nuxt to="/">Vitality</v-tab>
+            <v-tab nuxt to="/meditation" disabled>Meditation</v-tab>
+            <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
+          </v-tabs>
+          <nuxt />
+        </v-row>
       </v-container>
     </v-main>
   </v-app>

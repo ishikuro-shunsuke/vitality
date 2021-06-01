@@ -1,6 +1,28 @@
 <template>
-  <v-container class="mt-10">
+  <v-container>
     <v-row>
+      <v-col cols="12" class="pl-0 pr-0">
+        <h2>Action</h2>
+        <v-dialog v-model="dialog" class="mx-auto" max-width="200">
+          <template #activator="{ on, attrs }">
+            <v-btn x-large v-bind="attrs" v-on="on">emit</v-btn>
+          </template>
+          <v-card>
+            <v-card-title>Emitted?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn
+                @click="
+                  dialog = false
+                  emit()
+                "
+              >
+                yes
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-col>
       <v-col cols="12" md="6" class="pl-0 pr-0">
         <h2>Testosterone level</h2>
         <VitalityChart></VitalityChart>
@@ -27,6 +49,11 @@ export default {
     VitalityChart,
     VitalityGraph,
     VitalityHistory,
+  },
+  data() {
+    return {
+      dialog: null,
+    }
   },
   created() {
     this.$store.dispatch('initialize')
