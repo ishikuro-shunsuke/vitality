@@ -12,7 +12,8 @@
         :key="month.label"
         cols="4"
         md="2"
-        lg="1"
+        xl="1"
+        class="pr-0 pl-0"
       >
         <v-card color="transparent" flat max-width="120">
           <v-card-subtitle class="text-center pb-1">

@@ -29,9 +29,7 @@ export default {
   computed: {
     chartdata() {
       return {
-        labels: Array.from(Array(7).keys())
-          .reverse()
-          .map((v) => v + ' days ago'),
+        labels: Array.from(Array(7).keys()).reverse(),
         datasets: [
           {
             type: 'bar',
@@ -56,22 +54,6 @@ export default {
             borderColor: colors.deepOrange.darken4,
             backgroundColor: colors.grey.darken3 + '33',
           },
-          /*
-          {
-            type: 'line',
-            borderDash: [5, 5],
-            borderWidth: 1,
-            borderColor: colors.orange.darken3,
-            data: Array(9).fill(20),
-          },
-          {
-            type: 'line',
-            borderDash: [5, 5],
-            borderWidth: 1,
-            borderColor: colors.orange.darken4,
-            data: Array(9).fill(40),
-          },
-*/
         ],
       }
     },
