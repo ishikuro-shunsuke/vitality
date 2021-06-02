@@ -9,11 +9,14 @@
           <v-col cols="12" md="4" class="pl-0 pr-0">
             <VitalityProgress></VitalityProgress>
           </v-col>
+          <v-col cols="12" md="4" class="pl-0 pr-0">
+            <MeditationProgress></MeditationProgress>
+          </v-col>
         </v-row>
         <v-row>
           <v-tabs v-model="tab" grow :color="color">
             <v-tab nuxt to="/">Vitality</v-tab>
-            <v-tab nuxt to="/meditation" disabled>Meditation</v-tab>
+            <v-tab nuxt to="/meditation">Meditation</v-tab>
             <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
           </v-tabs>
           <nuxt />
@@ -25,10 +28,12 @@
 
 <script>
 import VitalityProgress from '../components/vitality/Progress'
+import MeditationProgress from '../components/meditation/Progress'
 
 export default {
   components: {
     VitalityProgress,
+    MeditationProgress,
   },
   data() {
     return {
@@ -64,6 +69,9 @@ export default {
         ? 'orange'
         : ''
     },
+  },
+  created() {
+    this.$store.dispatch('initialize')
   },
 }
 </script>

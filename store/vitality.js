@@ -27,8 +27,8 @@ export const mutations = {
 }
 
 export const actions = {
-  async emit() {
+  async emit({ commit }) {
     const result = await API.graphql({ query: gqlMutations.emit })
-    this.commit('vitality/addEmissions', [result.data.emit])
+    commit('addEmissions', [result.data.emit])
   },
 }

@@ -14,7 +14,7 @@
               <v-btn
                 @click="
                   dialog = false
-                  emit()
+                  $store.dispatch('vitality/emit')
                 "
               >
                 yes
@@ -25,38 +25,35 @@
       </v-col>
       <v-col cols="12" md="6" class="pl-0 pr-0">
         <h2>Testosterone level</h2>
-        <VitalityChart></VitalityChart>
+        <Chart></Chart>
       </v-col>
       <v-col cols="12" md="6" class="pl-0 pr-0">
         <h2>Past 30 days</h2>
-        <VitalityGraph></VitalityGraph>
+        <Graph></Graph>
       </v-col>
     </v-row>
     <v-row>
       <h2>Past emissions</h2>
-      <VitalityHistory></VitalityHistory>
+      <History></History>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import VitalityChart from '../components/vitality/Chart'
-import VitalityGraph from '../components/vitality/Graph'
-import VitalityHistory from '../components/vitality/History'
+import Chart from '../components/vitality/Chart'
+import Graph from '../components/vitality/Graph'
+import History from '../components/vitality/History'
 
 export default {
   components: {
-    VitalityChart,
-    VitalityGraph,
-    VitalityHistory,
+    Chart,
+    Graph,
+    History,
   },
   data() {
     return {
       dialog: null,
     }
-  },
-  created() {
-    this.$store.dispatch('initialize')
   },
 }
 </script>
