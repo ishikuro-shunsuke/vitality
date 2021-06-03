@@ -46,75 +46,8 @@
 import { mapState } from 'vuex'
 
 export default {
-  data() {
-    return {
-      calendar: [],
-    }
-  },
   computed: {
-    ...mapState('vitality', ['pending', 'emissions']),
-  },
-  watch: {
-    pending(newValue, oldValue) {
-      if (newValue && !oldValue) {
-        const oldest =
-          this.emissions.length === 0
-            ? new Date()
-            : new Date(Math.min(...this.emissions) * 1000)
-        this.generateNewMonthRange(oldest)
-      }
-    },
-    emissions(newValue, oldValue) {
-      const newEmissions = newValue.filter((e) => !oldValue.includes(e))
-      this.insertDataToCalendar(newEmissions)
-    },
-  },
-  created() {
-    const now = new Date()
-    this.calendar.push({
-      label: `${now.getFullYear()}/${now.getMonth() + 1}`,
-      start: new Date(now.getFullYear(), now.getMonth()),
-      end: new Date(now.getFullYear(), now.getMonth() + 1),
-      count: 0,
-    })
-  },
-  methods: {
-    generateNewMonthRange(target) {
-      const oldestMonth = new Date(
-        Math.min(...this.calendar.map((m) => m.start))
-      )
-
-      if (oldestMonth < target) {
-        return
-      }
-      let i = 1
-      while (
-        new Date(oldestMonth.getFullYear(), oldestMonth.getMonth() - i + 1) >
-        target
-      ) {
-        const cur = new Date(
-          oldestMonth.getFullYear(),
-          oldestMonth.getMonth() - i
-        )
-        this.calendar.push({
-          label: `${cur.getFullYear()}/${cur.getMonth() + 1}`,
-          start: cur,
-          end: new Date(cur.getFullYear(), cur.getMonth() + 1),
-          count: 0,
-        })
-        i++
-      }
-    },
-    insertDataToCalendar(emissions) {
-      emissions.forEach((e) => {
-        const m = this.calendar.find(
-          (m) => e >= m.start / 1000 && e < m.end / 1000
-        )
-        if (m) {
-          m.count++
-        }
-      })
-    },
+    ...mapState('vitality', ['pending', 'calendar']),
   },
 }
 </script>
