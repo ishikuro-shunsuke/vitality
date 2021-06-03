@@ -1,11 +1,10 @@
 import { API } from 'aws-amplify'
-import axios from 'axios'
 import * as gqlMutations from '../graphql/mutations'
 const WEEKLY_API = 'https://api.track.toggl.com/reports/api/v2/weekly'
 const UA = 'Vitality'
 
 export const state = () => ({
-  initialized: false,
+  pending: false,
   settings: {
     apiKey: '',
     workspaceId: null,
@@ -22,8 +21,11 @@ export const getters = {
 }
 
 export const mutations = {
-  initialized(state) {
-    state.initialized = true
+  pending(state) {
+    state.pending = true
+  },
+  done(state) {
+    state.pending = false
   },
   loadSettings(state, settings) {
     state.settings = settings
@@ -57,7 +59,8 @@ export const actions = {
   },
   async fetchWeeklyReport({ commit, state }) {
     try {
-      const result = await axios.get(WEEKLY_API, {
+      commit('pending')
+      const result = await this.$axios.$get(WEEKLY_API, {
         auth: {
           username: state.settings.apiKey,
           password: 'api_token',
@@ -70,8 +73,9 @@ export const actions = {
       })
       commit(
         'setWeekEntries',
-        result.data.week_totals.map((v) => Math.floor(v / 1000 / 60))
+        result.week_totals.map((v) => Math.floor(v / 1000 / 60))
       )
+      commit('done')
     } catch (error) {
       console.log(error)
     }

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-progress-circular
-      v-if="!initialized"
+      v-if="pending"
       :size="200"
       indeterminate
       color="primary"
@@ -70,7 +70,7 @@ export default {
           return histgram
         }, Array(TRACKING_DAYS).fill(0))
     },
-    ...mapState('vitality', ['emissions', 'initialized']),
+    ...mapState('vitality', ['emissions', 'pending']),
     ...mapGetters('vitality', ['elapsed']),
   },
 }

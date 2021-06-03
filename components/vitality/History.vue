@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-progress-circular
-      v-if="!initialized"
+      v-if="pending"
       :size="200"
       indeterminate
       color="primary"
@@ -52,10 +52,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('vitality', ['initialized', 'emissions']),
+    ...mapState('vitality', ['pending', 'emissions']),
   },
   watch: {
-    initialized(newValue, oldValue) {
+    pending(newValue, oldValue) {
       if (newValue && !oldValue) {
         const oldest =
           this.emissions.length === 0

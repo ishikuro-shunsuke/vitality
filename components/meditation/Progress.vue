@@ -8,7 +8,7 @@
         :value="(weekTotal / 280) * 100"
         color="green"
       >
-        {{ Math.floor(weekTotal) }}/280
+        {{ pending ? 0 : Math.floor(weekTotal) }}/280
         <v-icon color="green" x-large>mdi-meditation</v-icon>
       </v-progress-circular>
     </v-row>
@@ -20,7 +20,7 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapState('meditation', ['initialized']),
+    ...mapState('meditation', ['pending']),
     ...mapGetters('meditation', ['weekTotal']),
   },
 }

@@ -19,7 +19,7 @@
             <v-tab nuxt to="/meditation">Meditation</v-tab>
             <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
           </v-tabs>
-          <nuxt />
+          <nuxt keep-alive />
         </v-row>
       </v-container>
     </v-main>
@@ -59,6 +59,12 @@ export default {
       title: 'Vuetify.js',
     }
   },
+  async fetch() {
+    await Promise.all([
+      this.$store.dispatch('vitality/fetchEmissions'),
+      this.$store.dispatch('fetchSettings'),
+    ])
+  },
   computed: {
     color() {
       return this.tab === '/'
@@ -69,9 +75,6 @@ export default {
         ? 'orange'
         : ''
     },
-  },
-  created() {
-    this.$store.dispatch('initialize')
   },
 }
 </script>

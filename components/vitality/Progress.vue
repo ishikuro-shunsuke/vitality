@@ -28,7 +28,7 @@ export default {
     value() {
       return (this.elapsed / 7.0) * 100
     },
-    ...mapState('vitality', ['initialized']),
+    ...mapState('vitality', ['pending']),
     ...mapGetters('vitality', ['elapsed']),
   },
   methods: {
