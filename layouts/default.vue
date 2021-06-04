@@ -12,12 +12,15 @@
           <v-col cols="12" md="4" class="pl-0 pr-0">
             <MeditationProgress></MeditationProgress>
           </v-col>
+          <v-col cols="12" md="4" class="pl-0 pr-0">
+            <ExerciseProgress></ExerciseProgress>
+          </v-col>
         </v-row>
         <v-row>
           <v-tabs v-model="tab" grow :color="color">
             <v-tab nuxt to="/">Vitality</v-tab>
             <v-tab nuxt to="/meditation">Meditation</v-tab>
-            <v-tab nuxt to="/exercise" disabled>Exercise</v-tab>
+            <v-tab nuxt to="/exercise">Exercise</v-tab>
           </v-tabs>
           <nuxt keep-alive />
         </v-row>
@@ -29,11 +32,13 @@
 <script>
 import VitalityProgress from '../components/vitality/Progress'
 import MeditationProgress from '../components/meditation/Progress'
+import ExerciseProgress from '../components/exercise/Progress'
 
 export default {
   components: {
     VitalityProgress,
     MeditationProgress,
+    ExerciseProgress,
   },
   data() {
     return {
@@ -63,6 +68,7 @@ export default {
     await Promise.all([
       this.$store.dispatch('vitality/fetchEmissions'),
       this.$store.dispatch('fetchSettings'),
+      this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
   },
   computed: {

@@ -45,7 +45,7 @@ export default {
   ],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ['@nuxtjs/axios'],
+  modules: ['@nuxtjs/axios', '@nuxtjs/auth-next'],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
@@ -75,6 +75,30 @@ export default {
       name: 'Vitality',
       short_name: 'Vitality',
       background_color: '#121212',
+    },
+  },
+
+  auth: {
+    redirect: {
+      callback: '/auth_callback',
+      home: '/exercise',
+      logout: '/',
+    },
+    strategies: {
+      fitbit: {
+        scheme: 'oauth2',
+        endpoints: {
+          authorization: 'https://www.fitbit.com/oauth2/authorize',
+          token: 'https://api.fitbit.com/oauth2/token',
+        },
+        grantType: 'authorization_code',
+        clientId:
+          process.env.NODE_ENV === 'development'
+            ? process.env.FITBIT_CLIENT_ID_DEV
+            : process.env.FITBIT_CLIENT_ID,
+        scope: 'activity',
+        codeChallengeMethod: 'S256',
+      },
     },
   },
 }
