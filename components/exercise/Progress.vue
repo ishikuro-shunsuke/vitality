@@ -22,7 +22,7 @@ export default {
   computed: {
     ...mapState('exercise', ['achivements']),
     count() {
-      return this.achivements.reduce((s, v) => (v ? s + 1 : s), 0)
+      return this.achivements.reduce((s, v) => (v.active ? s + 1 : s), 0)
     },
   },
   methods: {
