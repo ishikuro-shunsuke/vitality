@@ -1,24 +1,19 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
-      <v-progress-circular
-        :rotate="-90"
-        :size="350"
-        :width="80"
-        :value="(count / 7) * 100"
-        color="orange"
-      >
+      <Progress color="orange" :value="(count / 7) * 100" icon="mdi-run">
         {{ count }}/7
-        <v-icon color="orange" x-large>mdi-run</v-icon>
-      </v-progress-circular>
+      </Progress>
     </v-row>
   </v-container>
 </template>
 
 <script>
 import { mapState } from 'vuex'
+import Progress from '@/components/Progress'
 
 export default {
+  components: { Progress },
   computed: {
     ...mapState('exercise', ['achivements']),
     count() {

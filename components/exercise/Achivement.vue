@@ -11,10 +11,14 @@
       <v-card shaped>
         <v-card-text>
           <v-row>
-            <v-col v-if="!$auth.loggedIn" cols="1" class="d-flex align-center">
+            <v-col
+              v-if="!$auth.loggedIn || !achivement.date"
+              cols="1"
+              class="d-flex align-center"
+            >
               <v-icon color="grey darken-2">mdi-progress-alert</v-icon>
             </v-col>
-            <v-col cols="1" class="d-flex align-center">
+            <v-col cols="2" md="1" class="d-flex align-center">
               {{ getDay(achivement.date) }}
             </v-col>
             <v-col>

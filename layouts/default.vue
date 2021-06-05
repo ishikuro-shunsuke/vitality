@@ -6,21 +6,25 @@
           <h1>Vitality</h1>
         </v-row>
         <v-row>
-          <v-col cols="12" md="4" class="pl-0 pr-0">
+          <v-col cols="12" sm="4" class="pl-0 pr-0">
             <VitalityProgress></VitalityProgress>
           </v-col>
-          <v-col cols="12" md="4" class="pl-0 pr-0">
+          <v-col cols="12" sm="4" class="pl-0 pr-0">
             <MeditationProgress></MeditationProgress>
           </v-col>
-          <v-col cols="12" md="4" class="pl-0 pr-0">
+          <v-col cols="12" sm="4" class="pl-0 pr-0">
             <ExerciseProgress></ExerciseProgress>
           </v-col>
         </v-row>
         <v-row class="mt-10">
-          <v-tabs v-model="tab" grow :color="color">
-            <v-tab nuxt to="/">Vitality</v-tab>
-            <v-tab nuxt to="/meditation">Meditation</v-tab>
-            <v-tab nuxt to="/exercise">Exercise</v-tab>
+          <v-tabs id="detail" v-model="tab" grow :color="color">
+            <v-tab nuxt :to="{ path: '/', hash: 'detail' }">Vitality</v-tab>
+            <v-tab nuxt :to="{ path: '/meditation', hash: 'detail' }">
+              Meditation
+            </v-tab>
+            <v-tab nuxt :to="{ path: '/exercise', hash: 'detail' }">
+              Exercise
+            </v-tab>
           </v-tabs>
           <nuxt keep-alive />
         </v-row>
@@ -75,13 +79,11 @@ export default {
   },
   computed: {
     color() {
-      return this.tab === '/'
-        ? 'primary'
-        : this.tab === '/meditation'
-        ? 'green'
-        : this.tab === '/exercise'
-        ? 'orange'
-        : ''
+      return {
+        '/': 'primary',
+        '/meditation': 'green',
+        '/exercise': 'orange',
+      }[this.$route.path]
     },
   },
 }

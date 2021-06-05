@@ -1,40 +1,25 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
-      <v-progress-circular
-        :rotate="-90"
-        :size="350"
-        :width="80"
-        :value="value"
-        :color="elapsed <= 7 ? 'primary' : 'warning'"
+      <Progress
+        :color="elapsed <= 7 ? 'primary' : 'red'"
+        :value="(elapsed / 7.0) * 100"
+        icon="mdi-battery-plus"
       >
         {{ elapsed }}/7
-        <v-icon color="primary" x-large>mdi-battery-plus</v-icon>
-      </v-progress-circular>
+      </Progress>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
+import Progress from '@/components/Progress'
 
 export default {
-  data() {
-    return {
-      dialog: false,
-    }
-  },
+  components: { Progress },
   computed: {
-    value() {
-      return (this.elapsed / 7.0) * 100
-    },
-    ...mapState('vitality', ['pending']),
     ...mapGetters('vitality', ['elapsed']),
-  },
-  methods: {
-    emit() {
-      this.$store.dispatch('vitality/emit')
-    },
   },
 }
 </script>
