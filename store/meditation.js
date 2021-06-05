@@ -57,7 +57,18 @@ export const actions = {
       commit('saved')
     }
   },
+  async removeSettings() {
+    await API.graphql({ query: gqlMutations.removeTogglSettings })
+  },
   async fetchWeeklyReport({ commit, state }) {
+    if (
+      state.settings.apiKey.length === 0 ||
+      !state.settings.workspaceId ||
+      !state.settings.projectId
+    ) {
+      return
+    }
+
     try {
       commit('pending')
       const result = await this.$axios.$get(WEEKLY_API, {

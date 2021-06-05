@@ -9,6 +9,7 @@ type Emissions {
 
 type Mutation {
   emit(profile: String): AWSTimestamp!
+  removeTogglSettings(profile: String): User
   saveTogglSettings(input: TogglInput!, profile: String): Toggl
 }
 

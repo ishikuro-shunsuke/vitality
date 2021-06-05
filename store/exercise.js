@@ -1,5 +1,7 @@
 export const state = () => ({
-  achivements: new Array(7).fill(false),
+  achivements: new Array(7).fill([
+    { date: null, active: false, acvitivies: [] },
+  ]),
 })
 
 export const mutations = {
@@ -10,9 +12,10 @@ export const mutations = {
 
 export const actions = {
   async fetchWeeklyReport({ commit }) {
-    if (!this.$auth.loggedIn) {
+    if (!this.$auth.strategy.token.status().valid()) {
       return
     }
+
     const now = new Date()
     const dates = new Array(7).fill().map((_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)

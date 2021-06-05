@@ -10,7 +10,7 @@
         <v-btn v-if="!$nuxt.$auth.loggedIn" x-large @click="login">
           Login
         </v-btn>
-        <v-btn v-else x-large @click="$nuxt.$auth.logout()">Logout</v-btn>
+        <v-btn v-else x-large @click="logout">Logout</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -25,8 +25,10 @@ export default {
   },
   methods: {
     async login() {
-      await this.$nuxt.$auth.loginWith('fitbit')
-      this.$store.dispatch('exercise/fetchWeeklyReport')
+      await this.$auth.loginWith('fitbit')
+    },
+    async logout() {
+      await this.$auth.logout()
     },
   },
 }

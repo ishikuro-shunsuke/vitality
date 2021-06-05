@@ -67,7 +67,9 @@ export default {
   async fetch() {
     await Promise.all([
       this.$store.dispatch('vitality/fetchEmissions'),
-      this.$store.dispatch('fetchSettings'),
+      this.$store
+        .dispatch('fetchSettings')
+        .then(() => this.$store.dispatch('meditation/fetchWeeklyReport')),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
   },
