@@ -57,8 +57,11 @@ export const actions = {
       commit('saved')
     }
   },
-  async removeSettings() {
+  async removeSettings({ commit }) {
+    commit('saving')
     await API.graphql({ query: gqlMutations.removeTogglSettings })
+    commit('loadSettings', { apiKey: '', workspaceId: null, projectId: null })
+    commit('saved')
   },
   async fetchWeeklyReport({ commit, state }) {
     if (

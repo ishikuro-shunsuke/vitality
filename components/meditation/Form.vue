@@ -25,6 +25,7 @@
             label="Project ID"
           ></v-text-field>
           <v-btn :disabled="!valid" @click="save">Save</v-btn>
+          <v-btn :disabled="!valid" @click="reset">Reset</v-btn>
           <v-progress-circular
             v-if="saving"
             indeterminate
@@ -37,7 +38,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapActions } from 'vuex'
 
 export default {
   data() {
@@ -70,8 +71,12 @@ export default {
     this.input = { ...this.settings }
   },
   methods: {
-    save() {
-      this.$store.dispatch('meditation/saveSettings', this.input)
+    ...mapActions('meditation', ['saveSettings', 'removeSettings']),
+    async save() {
+      await this.saveSettings(this.input)
+    },
+    async reset() {
+      await this.removeSettings()
     },
   },
 }
