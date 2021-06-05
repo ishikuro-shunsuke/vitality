@@ -80,21 +80,29 @@ export const mutations = {
 
 export const actions = {
   async emit({ commit }) {
-    const result = await API.graphql({ query: gqlMutations.emit })
-    commit('addEmissions', [result.data.emit])
-    commit('incrementCalendar')
+    try {
+      const result = await API.graphql({ query: gqlMutations.emit })
+      commit('addEmissions', [result.data.emit])
+      commit('incrementCalendar')
+    } catch (error) {
+      commit('print', error, { root: true })
+    }
   },
   async fetchEmissions({ state, commit }) {
     commit('pending')
-    const result = await API.graphql({ query: gqlQueries.emission })
-    commit('addEmissions', result.data.emission.history)
-    commit('initCalendar')
-    const oldest =
-      state.emissions.length === 0
-        ? new Date()
-        : new Date(Math.min(...state.emissions) * 1000)
-    commit('generateNewMonthRange', oldest)
-    commit('insertDataToCalendar')
+    try {
+      const result = await API.graphql({ query: gqlQueries.emission })
+      commit('addEmissions', result.data.emission.history)
+      commit('initCalendar')
+      const oldest =
+        state.emissions.length === 0
+          ? new Date()
+          : new Date(Math.min(...state.emissions) * 1000)
+      commit('generateNewMonthRange', oldest)
+      commit('insertDataToCalendar')
+    } catch (error) {
+      commit('print', error, { root: true })
+    }
     commit('done')
   },
 }

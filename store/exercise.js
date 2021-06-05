@@ -30,19 +30,16 @@ export const actions = {
         { headers: { Authorization: this.$auth.strategy.token.get() } }
       )
     )
-    try {
-      const results = await Promise.all(promises)
-      const achivements = results.map((d, i) => {
-        return {
-          date: dates[i],
-          active:
-            d.summary.veryActiveMinutes + d.summary.fairlyActiveMinutes > 20,
-          activities: d.activities.map((activity) => activity.name),
-        }
-      })
-      commit('setAchivements', achivements)
-    } catch (error) {
-      console.error(error)
-    }
+
+    const results = await Promise.all(promises)
+    const achivements = results.map((d, i) => {
+      return {
+        date: dates[i],
+        active:
+          d.summary.veryActiveMinutes + d.summary.fairlyActiveMinutes > 20,
+        activities: d.activities.map((activity) => activity.name),
+      }
+    })
+    commit('setAchivements', achivements)
   },
 }

@@ -52,15 +52,19 @@ export const actions = {
       commit('loadSettings', settings)
       await dispatch('fetchWeeklyReport')
     } catch (error) {
-      console.log(error)
+      commit('print', error, { root: true })
     } finally {
       commit('saved')
     }
   },
   async removeSettings({ commit }) {
     commit('saving')
-    await API.graphql({ query: gqlMutations.removeTogglSettings })
-    commit('loadSettings', { apiKey: '', workspaceId: null, projectId: null })
+    try {
+      await API.graphql({ query: gqlMutations.removeTogglSettings })
+      commit('loadSettings', { apiKey: '', workspaceId: null, projectId: null })
+    } catch (error) {
+      commit('print', error, { root: true })
+    }
     commit('saved')
   },
   async fetchWeeklyReport({ commit, state }) {
@@ -72,26 +76,22 @@ export const actions = {
       return
     }
 
-    try {
-      commit('pending')
-      const result = await this.$axios.$get(WEEKLY_API, {
-        auth: {
-          username: state.settings.apiKey,
-          password: 'api_token',
-        },
-        params: {
-          workspace_id: state.settings.workspaceId,
-          project_ids: state.settings.projectId,
-          user_agent: UA,
-        },
-      })
-      commit(
-        'setWeekEntries',
-        result.week_totals.map((v) => Math.floor(v / 1000 / 60))
-      )
-      commit('done')
-    } catch (error) {
-      console.log(error)
-    }
+    commit('pending')
+    const result = await this.$axios.$get(WEEKLY_API, {
+      auth: {
+        username: state.settings.apiKey,
+        password: 'api_token',
+      },
+      params: {
+        workspace_id: state.settings.workspaceId,
+        project_ids: state.settings.projectId,
+        user_agent: UA,
+      },
+    })
+    commit(
+      'setWeekEntries',
+      result.week_totals.map((v) => Math.floor(v / 1000 / 60))
+    )
+    commit('done')
   },
 }

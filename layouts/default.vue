@@ -28,12 +28,19 @@
           </v-tabs>
           <nuxt keep-alive />
         </v-row>
+        <v-snackbar v-model="snackbarVisible" multi-line>
+          {{ snackbar.text }}
+          <template #action="{ attrs }">
+            <v-btn text v-bind="attrs" @click="clearAlert">Close</v-btn>
+          </template>
+        </v-snackbar>
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex'
 import VitalityProgress from '../components/vitality/Progress'
 import MeditationProgress from '../components/meditation/Progress'
 import ExerciseProgress from '../components/exercise/Progress'
@@ -47,25 +54,6 @@ export default {
   data() {
     return {
       tab: null,
-      clipped: false,
-      drawer: false,
-      fixed: false,
-      items: [
-        {
-          icon: 'mdi-apps',
-          title: 'Welcome',
-          to: '/',
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire',
-        },
-      ],
-      miniVariant: false,
-      right: true,
-      rightDrawer: false,
-      title: 'Vuetify.js',
     }
   },
   async fetch() {
@@ -85,6 +73,20 @@ export default {
         '/exercise': 'orange',
       }[this.$route.path]
     },
+    ...mapState(['snackbar']),
+    snackbarVisible: {
+      get() {
+        return this.snackbar.display
+      },
+      set(val) {
+        if (val === false) {
+          this.clearAlert()
+        }
+      },
+    },
+  },
+  methods: {
+    ...mapMutations(['print', 'clearAlert']),
   },
 }
 </script>
