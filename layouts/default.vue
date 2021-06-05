@@ -16,7 +16,7 @@
             <ExerciseProgress></ExerciseProgress>
           </v-col>
         </v-row>
-        <v-row>
+        <v-row class="mt-10">
           <v-tabs v-model="tab" grow :color="color">
             <v-tab nuxt to="/">Vitality</v-tab>
             <v-tab nuxt to="/meditation">Meditation</v-tab>

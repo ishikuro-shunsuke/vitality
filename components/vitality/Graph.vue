@@ -53,7 +53,7 @@ export default {
         colors.grey.darken4,
         colors.blue.base,
       ]
-      return this.elapsed >= 7 ? [colors.blue.base] : defaultTheme
+      return this.elapsed >= 30 ? [colors.blue.base] : defaultTheme
     },
     value() {
       const secondsInDay = 60 * 60 * 24
