@@ -68,7 +68,7 @@ export const mutations = {
       const i = state.calendar.findIndex(
         (m) => e >= m.start / 1000 && e < m.end / 1000
       )
-      if (i) {
+      if (i !== -1) {
         state.calendar[i].count++
       }
     })
