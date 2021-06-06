@@ -3,7 +3,22 @@
     <v-main>
       <v-container>
         <v-row>
-          <h1>Vitality</h1>
+          <v-col>
+            <h1>Vitality</h1>
+          </v-col>
+          <v-col class="text-right" align-self="center">
+            <v-icon
+              large
+              color="grey"
+              @click="
+                openExternalLink(
+                  'https://github.com/ishikuro-shunsuke/vitality'
+                )
+              "
+            >
+              mdi-github
+            </v-icon>
+          </v-col>
         </v-row>
         <v-row>
           <v-col cols="12" sm="4" class="pl-0 pr-0">
@@ -87,6 +102,9 @@ export default {
   },
   methods: {
     ...mapMutations(['print', 'clearAlert']),
+    openExternalLink(url) {
+      window.open(url, '_blank')
+    },
   },
 }
 </script>

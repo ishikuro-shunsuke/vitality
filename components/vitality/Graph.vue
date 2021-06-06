@@ -1,6 +1,6 @@
 <template>
   <LineChart
-    height="180"
+    :height="180"
     :chart-data="chartData"
     :options="options"
   ></LineChart>
