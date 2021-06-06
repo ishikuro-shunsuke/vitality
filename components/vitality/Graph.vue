@@ -1,32 +1,9 @@
 <template>
-  <v-container>
-    <v-progress-circular
-      v-if="pending"
-      :size="200"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <v-sparkline
-      v-else
-      :value="value.reverse()"
-      :gradient="gradient"
-      :smooth="radius || false"
-      :padding="padding"
-      :line-width="width"
-      :stroke-linecap="lineCap"
-      :gradient-direction="gradientDirection"
-      :fill="fill"
-      :type="type"
-      :auto-line-width="autoLineWidth"
-      :show-labels="true"
-      color="accent"
-      auto-draw
-    >
-      <template #label="emission">
-        {{ emission.value * -1 }}
-      </template>
-    </v-sparkline>
-  </v-container>
+  <LineChart
+    height="180"
+    :chart-data="chartData"
+    :options="options"
+  ></LineChart>
 </template>
 
 <script>
@@ -37,25 +14,49 @@ const TRACKING_DAYS = 30
 
 export default {
   data: () => ({
-    width: 2,
-    radius: 10,
-    padding: 8,
-    lineCap: 'round',
-    gradientDirection: 'bottom',
-    fill: false,
-    type: 'trend',
-    autoLineWidth: false,
+    options: {
+      maintainAspectRatio: false,
+      legend: { display: false },
+      scales: {
+        yAxes: [
+          {
+            ticks: {
+              max: 0.5,
+              stepSize: 1,
+              callback(v) {
+                return v === 0.5 ? '' : v * -1
+              },
+            },
+            display: true,
+          },
+        ],
+        xAxes: [
+          {
+            ticks: {
+              callback(v) {
+                return v % 7 !== 0 ? '' : v + ' days ago'
+              },
+            },
+            display: true,
+          },
+        ],
+      },
+    },
   }),
   computed: {
-    gradient() {
-      const defaultTheme = [
-        this.$vuetify.theme.themes.dark.error,
-        colors.grey.darken4,
-        colors.blue.base,
-      ]
-      return this.elapsed >= 30 ? [colors.blue.base] : defaultTheme
+    chartData() {
+      return {
+        labels: Array.from(Array(this.dataset.length).keys()).reverse(),
+        datasets: [
+          {
+            data: this.dataset,
+            borderColor: colors.blue.base,
+            pointRadius: 0,
+          },
+        ],
+      }
     },
-    value() {
+    dataset() {
       const secondsInDay = 60 * 60 * 24
       const now = new Date()
       const tomorrow =
@@ -70,7 +71,7 @@ export default {
           return histgram
         }, Array(TRACKING_DAYS).fill(0))
     },
-    ...mapState('vitality', ['emissions', 'pending']),
+    ...mapState('vitality', ['emissions']),
     ...mapGetters('vitality', ['elapsed']),
   },
 }
