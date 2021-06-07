@@ -10,28 +10,26 @@
     >
       <v-card shaped>
         <v-card-text>
-          <v-row align="center">
-            <v-col cols="2" md="1">
+          <v-row align="center" no-gutters>
+            <v-col>
               {{ getDay(achievement.date) }}
             </v-col>
-            <v-col>
-              <v-chip
-                v-for="activity in Array.from(new Set(achievement.activities))"
-                :key="activity"
-                class="mr-2"
-                :color="
-                  lightActivities.includes(activity) ? 'grey' : 'deep-orange'
-                "
-              >
-                {{ activity }}
-              </v-chip>
+            <v-col cols="8">
+              <v-chip-group column>
+                <v-chip
+                  v-for="activity in Array.from(
+                    new Set(achievement.activities)
+                  )"
+                  :key="activity"
+                  :color="
+                    lightActivities.includes(activity) ? 'grey' : 'deep-orange'
+                  "
+                >
+                  {{ activity }}
+                </v-chip>
+              </v-chip-group>
             </v-col>
-            <v-col
-              v-if="!valid || !achievement.date"
-              cols="2"
-              md="1"
-              class="text-right"
-            >
+            <v-col v-if="!valid || !achievement.date" class="text-right">
               <v-icon color="error">mdi-sync-alert</v-icon>
             </v-col>
           </v-row>
