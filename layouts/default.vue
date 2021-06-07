@@ -76,7 +76,12 @@ export default {
       this.$store.dispatch('vitality/fetchEmissions'),
       this.$store
         .dispatch('fetchSettings')
-        .then(() => this.$store.dispatch('meditation/fetchWeeklyReport')),
+        .then(() =>
+          Promise.all([
+            this.$store.dispatch('meditation/fetchWeeklyReport'),
+            this.$store.dispatch('meditation/checkCurrentEntry'),
+          ])
+        ),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
   },

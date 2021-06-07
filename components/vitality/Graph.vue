@@ -70,6 +70,7 @@ export default {
           }
           return histgram
         }, Array(TRACKING_DAYS).fill(0))
+        .reverse()
     },
     ...mapState('vitality', ['emissions']),
     ...mapGetters('vitality', ['elapsed']),

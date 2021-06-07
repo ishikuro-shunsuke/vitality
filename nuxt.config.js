@@ -31,6 +31,7 @@ export default {
     { src: '@/plugins/amplify.js', ssr: false },
     { src: '@/plugins/vue-chartjs.js', ssr: false },
     { src: '@/plugins/axios.js', ssr: false },
+    { src: '@/plugins/fullscreen.js', ssr: false },
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
