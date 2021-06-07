@@ -20,13 +20,15 @@ export const mutations = {
 }
 
 export const actions = {
-  async fetchSettings({ commit }) {
+  async fetchUserData({ commit }) {
     try {
-      const settings = (await API.graphql({ query: gqlQueries.settings })).data
-        .settings
+      const user = (await API.graphql({ query: gqlQueries.user })).data.user
+      if (user.toggl) {
+        commit('meditation/loadSettings', user.toggl)
+      }
 
-      if (settings.toggl) {
-        commit('meditation/loadSettings', settings.toggl)
+      if (user.cache && user.cache.exercise) {
+        commit('exercise/loadCache', user.cache.exercise)
       }
     } catch (error) {
       commit('print', error)

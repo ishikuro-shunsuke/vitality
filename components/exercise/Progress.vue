@@ -1,8 +1,9 @@
 <template>
   <v-container>
     <v-row class="d-flex justify-center">
-      <Progress color="orange" :value="(count / 7) * 100" icon="mdi-run">
-        {{ count }}/7
+      <Progress :color="color" :value="(count / 7) * 100" icon="mdi-run">
+        <v-icon v-if="!valid" :color="color">mdi-sync-alert</v-icon>
+        <span>{{ count }}/7</span>
       </Progress>
     </v-row>
   </v-container>
@@ -15,14 +16,13 @@ import Progress from '@/components/Progress'
 export default {
   components: { Progress },
   computed: {
-    ...mapState('exercise', ['achivements']),
+    ...mapState('exercise', ['achievements', 'achievementsCache', 'valid']),
     count() {
-      return this.achivements.reduce((s, v) => (v.active ? s + 1 : s), 0)
+      const a = this.valid ? this.achievements : this.achievementsCache
+      return a.reduce((s, v) => (v.active ? s + 1 : s), 0)
     },
-  },
-  methods: {
-    emit() {
-      this.$store.dispatch('vitality/emit')
+    color() {
+      return this.valid ? 'orange' : '#FF980077'
     },
   },
 }

@@ -84,7 +84,7 @@ export default {
     redirect: {
       callback: '/auth_callback',
       home: '/exercise',
-      logout: '/',
+      logout: '/exercise',
     },
     strategies: {
       fitbit: {

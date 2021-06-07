@@ -3,13 +3,11 @@
     <v-row>
       <v-col cols="12">
         <h2>Past 7 days</h2>
-        <Achivement></Achivement>
+        <Achievement></Achievement>
       </v-col>
       <v-col cols="12">
         <h2>Fitbit</h2>
-        <v-btn v-if="!$nuxt.$auth.loggedIn" x-large @click="login">
-          Login
-        </v-btn>
+        <v-btn v-if="!valid" x-large @click="login">Login</v-btn>
         <v-btn v-else x-large @click="logout">Logout</v-btn>
       </v-col>
     </v-row>
@@ -17,18 +15,24 @@
 </template>
 
 <script>
-import Achivement from '../components/exercise/Achivement'
+import { mapState, mapMutations } from 'vuex'
+import Achievement from '../components/exercise/Achievement'
 
 export default {
   components: {
-    Achivement,
+    Achievement,
+  },
+  computed: {
+    ...mapState('exercise', ['valid']),
   },
   methods: {
+    ...mapMutations('exercise', ['confirmedToken', 'invalidateToken']),
     async login() {
       await this.$auth.loginWith('fitbit')
     },
     async logout() {
       await this.$auth.logout()
+      this.invalidateToken()
     },
   },
 }

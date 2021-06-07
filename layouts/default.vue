@@ -75,7 +75,7 @@ export default {
     await Promise.all([
       this.$store.dispatch('vitality/fetchEmissions'),
       this.$store
-        .dispatch('fetchSettings')
+        .dispatch('fetchUserData')
         .then(() =>
           Promise.all([
             this.$store.dispatch('meditation/fetchWeeklyReport'),
@@ -104,6 +104,13 @@ export default {
         }
       },
     },
+  },
+  mounted() {
+    if (this.$auth.strategy.token.status().valid()) {
+      this.$store.commit('exercise/confirmedToken')
+    } else {
+      this.$store.commit('exercise/invalidateToken')
+    }
   },
   methods: {
     ...mapMutations(['print', 'clearAlert']),

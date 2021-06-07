@@ -3,6 +3,16 @@
   mutation: Mutation
 }
 
+type Achivement {
+  active: Boolean!
+  activities: [String]!
+  date: AWSDate!
+}
+
+type Cache {
+  exercise: [Achivement]
+}
+
 type Emissions {
   history: [AWSTimestamp!]!
 }
@@ -10,12 +20,13 @@ type Emissions {
 type Mutation {
   emit(profile: String): AWSTimestamp!
   removeTogglSettings(profile: String): User
+  saveCache(input: CacheInput!, profile: String): Cache
   saveTogglSettings(input: TogglInput!, profile: String): Toggl
 }
 
 type Query {
   emission(profile: String): Emissions!
-  settings(profile: String): User!
+  user(profile: String): User!
 }
 
 type Toggl {
@@ -25,8 +36,19 @@ type Toggl {
 }
 
 type User {
+  cache: Cache
   profile: String!
   toggl: Toggl
+}
+
+input AchivementInput {
+  active: Boolean!
+  activities: [String]!
+  date: AWSDate!
+}
+
+input CacheInput {
+  exercise: [AchivementInput]!
 }
 
 input TogglInput {
