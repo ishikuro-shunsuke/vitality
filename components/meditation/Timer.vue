@@ -3,18 +3,26 @@
     <v-alert v-if="!settingsExist" type="warning" colored-border border="left">
       Account settings are required
     </v-alert>
-    <fullscreen :fullscreen.sync="fullscreen" class="d-flex align-strech">
-      <v-container class="align-self-center">
-        <v-row>
-          <v-col
-            :cols="fullscreen ? 12 : 6"
-            class="d-flex align-self-center"
-            :class="[!fullscreen ? 'justify-end' : 'justify-center']"
+    <v-container class="align-self-center">
+      <v-row align="center">
+        <v-col cols="6" class="d-flex align-self-center justify-end">
+          <fullscreen
+            :fullscreen.sync="fullscreen"
+            class="d-flex align-center justify-center"
+            :exit-on-click-wrapper="false"
           >
             <v-progress-circular
               :rotate="-90"
               :size="
-                fullscreen && $vuetify.breakpoint.name !== 'xs' ? 600 : 200
+                fullscreen && $vuetify.breakpoint.name === 'xs'
+                  ? 300
+                  : !fullscreen && $vuetify.breakpoint.name === 'xs'
+                  ? 150
+                  : fullscreen && $vuetify.breakpoint.name !== 'xs'
+                  ? 600
+                  : !fullscreen && $vuetify.breakpoint.name !== 'xs'
+                  ? 300
+                  : 300
               "
               :width="10"
               :value="(timer.duration / (20 * 60 * 1000)) * 100"
@@ -37,38 +45,27 @@
                 <v-icon>mdi-play</v-icon>
               </v-btn>
             </v-progress-circular>
-            <v-btn
-              v-if="fullscreen"
-              absolute
-              bottom
-              right
-              @click="toggleFullscreen"
-            >
-              <v-icon>mdi-fullscreen-exit</v-icon> exit fullscreen
+          </fullscreen>
+        </v-col>
+        <v-col cols="6">
+          <v-card flat color="transparent">
+            <v-card-text>
+              <p
+                class="font-weight-bold"
+                :class="[
+                  $vuetify.breakpoint.name === 'xs' ? 'text-h5' : 'text-h2',
+                ]"
+              >
+                {{ durationMMSS }}
+              </p>
+            </v-card-text>
+            <v-btn absolute small right @click="toggleFullscreen">
+              <v-icon>mdi-fullscreen</v-icon>fullscreen
             </v-btn>
-          </v-col>
-          <v-col v-if="!fullscreen" cols="6">
-            <v-card flat color="transparent">
-              <v-card-text v-if="!fullscreen">
-                <p
-                  class="font-weight-bold"
-                  :class="[
-                    $vuetify.breakpoint.name === 'xs' ? 'text-h5' : 'text-h2',
-                  ]"
-                >
-                  {{ durationMMSS }}
-                </p>
-              </v-card-text>
-              <v-card-text>
-                <v-btn @click="toggleFullscreen">
-                  <v-icon>mdi-fullscreen</v-icon> fullscreen
-                </v-btn>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </fullscreen>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
