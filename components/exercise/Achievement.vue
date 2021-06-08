@@ -11,7 +11,7 @@
       <v-card shaped>
         <v-card-text>
           <v-row align="center" no-gutters>
-            <v-col>
+            <v-col md="1">
               {{ getDay(achievement.date) }}
             </v-col>
             <v-col cols="8">
