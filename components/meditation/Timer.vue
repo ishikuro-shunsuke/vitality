@@ -1,6 +1,11 @@
 <template>
   <v-container>
-    <v-alert v-if="!settingsExist" type="warning" colored-border border="left">
+    <v-alert
+      v-if="!meditationSettingExists"
+      type="warning"
+      colored-border
+      border="left"
+    >
       Account settings are required
     </v-alert>
     <v-container class="align-self-center">
@@ -25,21 +30,21 @@
                   : 300
               "
               :width="10"
-              :value="(timer.duration / (20 * 60 * 1000)) * 100"
+              :value="(duration / (20 * 60 * 1000)) * 100"
               color="deep-orange"
             >
               <v-btn
-                v-if="timer.running"
+                v-if="running"
                 fab
-                :disabled="!settingsExist || pending"
+                :disabled="!meditationSettingExists"
                 @click="stop"
               >
                 <v-icon>mdi-stop</v-icon>
               </v-btn>
               <v-btn
-                v-if="!timer.running"
+                v-if="!running"
                 fab
-                :disabled="!settingsExist || pending"
+                :disabled="!meditationSettingExists"
                 @click="start"
               >
                 <v-icon>mdi-play</v-icon>
@@ -59,7 +64,7 @@
                 {{ durationMMSS }}
               </p>
             </v-card-text>
-            <v-btn absolute small right @click="toggleFullscreen">
+            <v-btn absolute small right @click="fullscreen = !fullscreen">
               <v-icon>mdi-fullscreen</v-icon>fullscreen
             </v-btn>
           </v-card>
@@ -70,50 +75,45 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
   data() {
     return {
+      intervalId: null,
+      duration: 0,
       fullscreen: false,
     }
   },
   computed: {
-    ...mapState('meditation', ['timer', 'pending']),
-    ...mapGetters('meditation', ['settingsExist']),
+    ...mapState('meditation/timer', ['startTime', 'running']),
+    ...mapGetters('userdata', ['meditationSettingExists']),
     durationMMSS() {
-      const m = Math.floor(this.timer.duration / 1000 / 60)
+      const m = Math.floor(this.duration / 1000 / 60)
       const paddingM = m > 99 ? m : `0${m}`.slice(-2)
       // eslint-disable-next-line prettier/prettier
-      const paddingS = `0${Math.floor(this.timer.duration / 1000) % 60}`.slice(-2)
+      const paddingS = `0${Math.floor(this.duration / 1000) % 60}`.slice(-2)
       return `${paddingM}:${paddingS}`
     },
   },
   watch: {
-    'timer.running'(val, old) {
+    running(val, old) {
       if (!old && val) {
-        const intervalId = setInterval(() => {
-          this.setDuration(Date.now() - this.timer.startTime)
+        this.intervalId = setInterval(() => {
+          this.duration = Date.now() - this.startTime
         }, 1000)
-        this.setIntervalId(intervalId)
+      } else if (!val) {
+        this.duration = 0
       }
     },
   },
   methods: {
-    ...mapActions('meditation', [
-      'fetchWeeklyReport',
-      'startTimer',
-      'stopTimer',
-    ]),
-    ...mapMutations('meditation', ['setIntervalId', 'setDuration']),
     async start() {
-      await this.startTimer()
+      await this.$store.dispatch('meditation/timer/startTimer')
     },
     async stop() {
-      await this.stopTimer()
-      await this.fetchWeeklyReport()
-    },
-    toggleFullscreen() {
-      this.fullscreen = !this.fullscreen
+      clearInterval(this.intervalId)
+      await this.$store.dispatch('meditation/timer/stopTimer')
+      await this.$store.dispatch('meditation/fetchWeekTotal')
     },
   },
 }

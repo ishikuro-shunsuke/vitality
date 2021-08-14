@@ -7,7 +7,7 @@
       </v-col>
       <v-col cols="12">
         <h2>Fitbit</h2>
-        <v-btn v-if="!valid" x-large @click="login">Login</v-btn>
+        <v-btn v-if="!loggedIn" x-large @click="login">Login</v-btn>
         <v-btn v-else x-large @click="logout">Logout</v-btn>
       </v-col>
     </v-row>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 import Achievement from '../components/exercise/Achievement'
 
 export default {
@@ -23,16 +23,14 @@ export default {
     Achievement,
   },
   computed: {
-    ...mapState('exercise', ['valid']),
+    ...mapState('exercise', ['loggedIn']),
   },
   methods: {
-    ...mapMutations('exercise', ['confirmedToken', 'invalidateToken']),
-    async login() {
-      await this.$auth.loginWith('fitbit')
+    login() {
+      this.$store.dispatch('exercise/loginTrackerService')
     },
-    async logout() {
-      await this.$auth.logout()
-      this.invalidateToken()
+    logout() {
+      this.$store.dispatch('exercise/logoutTrackerService')
     },
   },
 }

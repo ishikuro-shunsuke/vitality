@@ -43,6 +43,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters('vitality', ['elapsed']),
     currentLevel() {
       const norm =
         this.elapsed < dataset.length ? this.elapsed : dataset.length - 1
@@ -70,7 +71,6 @@ export default {
         ],
       }
     },
-    ...mapGetters('vitality', ['elapsed']),
   },
 }
 </script>

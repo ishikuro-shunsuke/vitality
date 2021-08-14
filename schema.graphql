@@ -3,24 +3,28 @@
   mutation: Mutation
 }
 
-type Achivement {
+type Achievement {
   active: Boolean!
   activities: [String]!
   date: AWSDate!
 }
 
 type Cache {
-  exercise: [Achivement]
+  exercise: Exercise
 }
 
 type Emissions {
   history: [AWSTimestamp!]!
 }
 
+type Exercise {
+  achievements: [Achievement]
+}
+
 type Mutation {
   emit(profile: String): AWSTimestamp!
   removeTogglSettings(profile: String): User
-  saveCache(input: CacheInput!, profile: String): Cache
+  saveExerciseCache(input: ExerciseInput!, profile: String): Exercise
   saveTogglSettings(input: TogglInput!, profile: String): Toggl
 }
 
@@ -29,30 +33,48 @@ type Query {
   user(profile: String): User!
 }
 
+type Settings {
+  toggl: Toggl
+}
+
 type Toggl {
   apiKey: String
-  projectId: Int
-  workspaceId: Int
+  focus: TogglIdSet
+  meditation: TogglIdSet
+}
+
+type TogglIdSet {
+  pid: Int
+  wid: Int
 }
 
 type User {
   cache: Cache
   profile: String!
-  toggl: Toggl
+  settings: Settings
 }
 
-input AchivementInput {
+input AchievementInput {
   active: Boolean!
   activities: [String]!
   date: AWSDate!
 }
 
 input CacheInput {
-  exercise: [AchivementInput]!
+  exercise: ExerciseInput
+}
+
+input ExerciseInput {
+  achievements: [AchievementInput]
+}
+
+input TogglIdSetInput {
+  pid: Int
+  wid: Int
 }
 
 input TogglInput {
-  apiKey: String!
-  projectId: Int!
-  workspaceId: Int!
+  apiKey: String
+  focus: TogglIdSetInput
+  meditation: TogglIdSetInput
 }

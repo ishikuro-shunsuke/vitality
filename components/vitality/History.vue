@@ -1,12 +1,6 @@
 <template>
   <v-container>
-    <v-progress-circular
-      v-if="pending"
-      :size="200"
-      indeterminate
-      color="primary"
-    ></v-progress-circular>
-    <v-row v-else>
+    <v-row>
       <v-col
         v-for="month in calendar"
         :key="month.label"
@@ -43,11 +37,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapState('vitality', ['pending', 'calendar']),
+    ...mapGetters('vitality', ['calendar']),
   },
 }
 </script>

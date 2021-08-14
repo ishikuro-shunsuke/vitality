@@ -3,9 +3,7 @@ import * as gqlQueries from '../graphql/queries'
 import * as gqlMutations from '../graphql/mutations'
 
 export const state = () => ({
-  pending: true,
   emissions: [],
-  calendar: [],
 })
 
 export const getters = {
@@ -17,64 +15,46 @@ export const getters = {
       ? Math.floor((Date.now() / 1000 - getters.recent) / (60 * 60 * 24))
       : null
   },
+  calendar(state) {
+    const c = []
+    const oldestDate =
+      state.emissions.length === 0
+        ? new Date()
+        : new Date(Math.min(...state.emissions) * 1000)
+
+    // generate month container
+    const today = new Date()
+    let iter = new Date(oldestDate.getFullYear(), oldestDate.getMonth())
+    while (iter < today) {
+      const nextMonth = new Date(iter.getFullYear(), iter.getMonth() + 1)
+      c.unshift({
+        label: `${iter.getFullYear()}/${iter.getMonth() + 1}`,
+        start: iter,
+        end: nextMonth,
+        count: 0,
+      })
+      iter = nextMonth
+    }
+
+    // count monthly emissions
+    state.emissions.forEach((e) => {
+      const i = c.findIndex(
+        (m) => e >= m.start.getTime() / 1000 && e < m.end.getTime() / 1000
+      )
+      c[i].count++
+    })
+
+    return c
+  },
 }
 
 export const mutations = {
-  pending(state) {
-    state.pending = true
-  },
-  done(state) {
-    state.pending = false
-  },
   addEmissions(state, emissions) {
-    state.emissions = [...state.emissions, ...emissions]
-  },
-  initCalendar(state) {
-    const now = new Date()
-    state.calendar.push({
-      label: `${now.getFullYear()}/${now.getMonth() + 1}`,
-      start: new Date(now.getFullYear(), now.getMonth()),
-      end: new Date(now.getFullYear(), now.getMonth() + 1),
-      count: 0,
-    })
-  },
-  generateNewMonthRange(state, oldestDate) {
-    const oldestMonth = new Date(
-      Math.min(...state.calendar.map((m) => m.start))
+    const newEmissions = Array.isArray(emissions) ? emissions : [emissions]
+    const epochEmissions = newEmissions.map((e) =>
+      e instanceof Date ? Math.floor(e.getTime() / 1000) : e
     )
-    if (oldestMonth < oldestDate) {
-      return
-    }
-    let i = 1
-    while (
-      new Date(oldestMonth.getFullYear(), oldestMonth.getMonth() - i + 1) >
-      oldestDate
-    ) {
-      const cur = new Date(
-        oldestMonth.getFullYear(),
-        oldestMonth.getMonth() - i
-      )
-      state.calendar.push({
-        label: `${cur.getFullYear()}/${cur.getMonth() + 1}`,
-        start: cur,
-        end: new Date(cur.getFullYear(), cur.getMonth() + 1),
-        count: 0,
-      })
-      i++
-    }
-  },
-  insertDataToCalendar(state) {
-    state.emissions.forEach((e) => {
-      const i = state.calendar.findIndex(
-        (m) => e >= m.start / 1000 && e < m.end / 1000
-      )
-      if (i !== -1) {
-        state.calendar[i].count++
-      }
-    })
-  },
-  incrementCalendar(state) {
-    state.calendar[0].count++
+    state.emissions = [...state.emissions, ...epochEmissions]
   },
 }
 
@@ -83,26 +63,16 @@ export const actions = {
     try {
       const result = await API.graphql({ query: gqlMutations.emit })
       commit('addEmissions', [result.data.emit])
-      commit('incrementCalendar')
     } catch (error) {
-      commit('print', error, { root: true })
+      throw new Error(error.message)
     }
   },
-  async fetchEmissions({ state, commit }) {
-    commit('pending')
+  async fetchEmissions({ commit }) {
     try {
       const result = await API.graphql({ query: gqlQueries.emission })
       commit('addEmissions', result.data.emission.history)
-      commit('initCalendar')
-      const oldest =
-        state.emissions.length === 0
-          ? new Date()
-          : new Date(Math.min(...state.emissions) * 1000)
-      commit('generateNewMonthRange', oldest)
-      commit('insertDataToCalendar')
     } catch (error) {
-      commit('print', error, { root: true })
+      throw new Error(error.message)
     }
-    commit('done')
   },
 }

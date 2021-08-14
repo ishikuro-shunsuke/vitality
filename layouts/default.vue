@@ -18,6 +18,7 @@
             >
               mdi-github
             </v-icon>
+            <ConfigDialog></ConfigDialog>
           </v-col>
         </v-row>
         <v-row>
@@ -59,12 +60,14 @@ import { mapState, mapMutations } from 'vuex'
 import VitalityProgress from '../components/vitality/Progress'
 import MeditationProgress from '../components/meditation/Progress'
 import ExerciseProgress from '../components/exercise/Progress'
+import ConfigDialog from '../components/ConfigDialog'
 
 export default {
   components: {
     VitalityProgress,
     MeditationProgress,
     ExerciseProgress,
+    ConfigDialog,
   },
   data() {
     return {
@@ -72,18 +75,18 @@ export default {
     }
   },
   async fetch() {
+    this.$store.dispatch('vitality/fetchEmissions')
+    await this.$store.dispatch('userdata/fetchUserData')
     await Promise.all([
-      this.$store.dispatch('vitality/fetchEmissions'),
-      this.$store
-        .dispatch('fetchUserData')
-        .then(() =>
-          Promise.all([
-            this.$store.dispatch('meditation/fetchWeeklyReport'),
-            this.$store.dispatch('meditation/checkCurrentEntry'),
-          ])
-        ),
+      this.$store.dispatch('meditation/timer/getRunningEntry'),
+      this.$store.dispatch('meditation/fetchWeekTotal'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
+    if (await this.$store.dispatch('exercise/checkAuthStatus')) {
+      this.$store.commit('exercise/loggedIn')
+    } else {
+      this.$store.commit('exercise/loggedOut')
+    }
   },
   computed: {
     color() {
@@ -104,13 +107,6 @@ export default {
         }
       },
     },
-  },
-  mounted() {
-    if (this.$auth.strategy.token.status().valid()) {
-      this.$store.commit('exercise/confirmedToken')
-    } else {
-      this.$store.commit('exercise/invalidateToken')
-    }
   },
   methods: {
     ...mapMutations(['print', 'clearAlert']),

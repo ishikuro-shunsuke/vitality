@@ -1,73 +1,51 @@
-import API from '@aws-amplify/api'
-import * as gqlMutations from '../graphql/mutations'
-
-const toyyyymmdd = (d) => {
-  const yyyy = `${d.getFullYear()}`
-  const mm = `0${d.getMonth() + 1}`.slice(-2)
-  const dd = `0${d.getDate()}`.slice(-2)
-  return `${yyyy}-${mm}-${dd}`
-}
-
 export const state = () => ({
   achievements: new Array(7).fill([
     { date: null, active: false, acvitivies: [] },
   ]),
-  achievementsCache: new Array(7).fill([
-    { date: null, active: false, acvitivies: [] },
-  ]),
-  valid: false,
+  loggedIn: false,
 })
 
 export const mutations = {
   setAchievements(state, entries) {
     state.achievements = entries
   },
-  invalidateToken(state) {
-    state.valid = false
+  loggedIn(state) {
+    state.loggedIn = true
   },
-  confirmedToken(state) {
-    state.valid = true
-  },
-  loadCache(state, cache) {
-    const now = new Date()
-    const diff =
-      (new Date(now.getFullYear(), now.getMonth(), now.getDate()) -
-        (new Date(cache[0].date).getTime() +
-          new Date().getTimezoneOffset() * 60 * 1000)) /
-      (1000 * 60 * 60 * 24)
-    const fill = Array(diff)
-      .fill(0)
-      .map((_, i) => {
-        return {
-          date: toyyyymmdd(new Date(now.getTime() - i * (1000 * 60 * 60 * 24))),
-          active: false,
-          activities: [],
-        }
-      })
-    state.achievementsCache = [...fill, ...cache].slice(0, 7)
+  loggedOut(state) {
+    state.loggedIn = false
   },
 }
 
 export const actions = {
-  async saveCacheToRemote({ state, commit }) {
-    try {
-      await API.graphql({
-        query: gqlMutations.saveCache,
-        variables: { input: { exercise: state.achievements } },
-      })
-    } catch (error) {
-      commit('print', error, { root: true })
-    }
+  async loginTrackerService({ commit }) {
+    await this.$auth.loginWith('fitbit')
+    commit('loggedIn')
   },
-  async fetchWeeklyReport({ commit, dispatch, state }) {
-    if (!this.$auth.strategy.token.status().valid()) {
-      return
+  async logoutTrackerService({ commit }) {
+    await this.$auth.logout()
+    commit('loggedOut')
+  },
+  checkAuthStatus() {
+    return this.$auth.strategy.token.status().valid()
+  },
+  async fetchWeeklyReport({ commit, dispatch, rootState }) {
+    if (!(await dispatch('checkAuthStatus'))) {
+      if (rootState.userdata?.cache?.exercise?.achievements) {
+        commit(
+          'setAchievements',
+          rootState.userdata.cache.exercise.achievements
+        )
+        return
+      } else {
+        throw new Error('This operation needs to login to fitbit service')
+      }
     }
 
     const now = new Date()
     const dates = new Array(7).fill().map((_, i) => {
       const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i)
-      return toyyyymmdd(d)
+      return this.$toyyyymmdd(d)
     })
     const promises = dates.map((date) =>
       this.$axios.$get(
@@ -86,7 +64,6 @@ export const actions = {
       }
     })
     commit('setAchievements', achievements)
-    commit('loadCache', achievements)
-    dispatch('saveCacheToRemote')
+    dispatch('userdata/saveExerciseCache', { achievements }, { root: true })
   },
 }

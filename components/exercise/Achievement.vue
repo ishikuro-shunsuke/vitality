@@ -1,7 +1,7 @@
 <template>
   <v-timeline dense>
     <v-timeline-item
-      v-for="achievement in weekReport"
+      v-for="achievement in achievements"
       :key="achievement.date"
       :color="achievement.active ? 'orange' : 'grey'"
       :icon="achievement.active ? 'mdi-run-fast' : 'mdi-bed'"
@@ -29,7 +29,7 @@
                 </v-chip>
               </v-chip-group>
             </v-col>
-            <v-col v-if="!valid || !achievement.date" class="text-right">
+            <v-col v-if="!loggedIn || !achievement.date" class="text-right">
               <v-icon color="error">mdi-sync-alert</v-icon>
             </v-col>
           </v-row>
@@ -41,20 +41,15 @@
 
 <script>
 import { mapState } from 'vuex'
-import colors from 'vuetify/lib/util/colors'
 
 export default {
   data() {
     return {
-      colors,
       lightActivities: ['Walk', 'Outdoor Bike'],
     }
   },
   computed: {
-    ...mapState('exercise', ['achievements', 'achievementsCache', 'valid']),
-    weekReport() {
-      return this.valid ? this.achievements : this.achievementsCache
-    },
+    ...mapState('exercise', ['achievements', 'loggedIn']),
   },
   methods: {
     getDay(date) {
