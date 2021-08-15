@@ -13,7 +13,7 @@
         </v-card-text>
         <v-card-text>
           <v-text-field
-            v-model="input.toggl.apiKey"
+            v-model="input.togglApiKey"
             label="API Key"
             :rules="apiKeyRules"
           ></v-text-field>
@@ -21,12 +21,12 @@
         <v-card-subtitle>Meditaiton</v-card-subtitle>
         <v-card-text>
           <v-text-field
-            v-model="input.toggl.meditation.wid"
+            v-model="input.meditationWid"
             label="Workspace ID"
             :rules="numberRules"
           ></v-text-field>
           <v-text-field
-            v-model="input.toggl.meditation.pid"
+            v-model="input.meditationPid"
             label="Project ID"
             :rules="numberRules"
           ></v-text-field>
@@ -34,19 +34,21 @@
         <v-card-subtitle>Focus</v-card-subtitle>
         <v-card-text>
           <v-text-field
-            v-model="input.toggl.focus.wid"
+            v-model="input.focusWid"
             label="Workspace ID"
             :rules="numberRules"
           ></v-text-field>
           <v-text-field
-            v-model="input.toggl.focus.pid"
+            v-model="input.focusPid"
             label="Project ID"
             :rules="numberRules"
           ></v-text-field>
         </v-card-text>
         <v-card-actions>
+          <v-btn :disabled="!valid" text color="red" @click="reset">
+            Remove
+          </v-btn>
           <v-spacer></v-spacer>
-          <v-btn :disabled="!valid" text @click="reset">Reset</v-btn>
           <v-btn :disabled="!valid" text @click="save">Save</v-btn>
           <v-progress-circular
             v-if="saving"
@@ -68,17 +70,11 @@ export default {
       hiding: false,
       valid: true,
       input: {
-        toggl: {
-          apiKey: null,
-          meditation: {
-            wid: null,
-            pid: null,
-          },
-          focus: {
-            wid: null,
-            pid: null,
-          },
-        },
+        togglApiKey: null,
+        meditationWid: null,
+        meditationPid: null,
+        focusWid: null,
+        focusPid: null,
       },
       apiKeyRules: [(v) => !!v || 'API Key is required'],
       numberRules: [(v) => /^\d+$/.test(v) || 'ID must be number'],
@@ -91,7 +87,19 @@ export default {
   watch: {
     hiding(_, newVal) {
       if (!newVal) {
-        this.input = { ...this.settings }
+        const meditation = {
+          ...this.settings.toggl.projects.find((p) => p.name === 'meditation'),
+        }
+        const focus = {
+          ...this.settings.toggl.projects.find((p) => p.name === 'focus'),
+        }
+        this.input = {
+          togglApiKey: this.settings.toggl.apiKey,
+          meditationWid: meditation.wid,
+          meditationPid: meditation.pid,
+          focusWid: focus.wid,
+          focusPid: focus.pid,
+        }
       }
     },
   },
@@ -99,25 +107,25 @@ export default {
     async save() {
       this.saving = true
       await this.$store.dispatch('userdata/saveTogglSettings', {
-        apiKey: this.input.toggl.apiKey,
-        focus: this.input.toggl.focus,
-        meditation: this.input.toggl.meditation,
+        apiKey: this.input.togglApiKey,
+        projects: [
+          {
+            name: 'meditation',
+            wid: this.input.meditationWid,
+            pid: this.input.meditationPid,
+          },
+          {
+            name: 'focus',
+            wid: this.input.focusWid,
+            pid: this.input.focusPid,
+          },
+        ],
       })
       this.saving = false
     },
     async reset() {
       this.saving = true
-      await this.$store.dispatch('userdata/saveTogglSettings', {
-        apiKey: null,
-        meditation: {
-          wid: null,
-          pid: null,
-        },
-        focus: {
-          wid: null,
-          pid: null,
-        },
-      })
+      await this.$store.dispatch('userdata/removeTogglSettings')
       this.saving = false
     },
   },

@@ -1,10 +1,22 @@
 export const state = () => ({
-  startTime: null,
-  running: false,
+  meditation: {
+    startTime: null,
+    running: false,
+  },
+  focus: {
+    startTime: null,
+    running: false,
+  },
 })
 
 export const mutations = {
-  initTimerWith(state, startTime) {
+  setProjectState(state, { project, params }) {
+    const n = { ...params, name: project }
+    state.projects = [
+      ...state.projects.map((p) => (p.name === project ? n : p)),
+    ]
+  },
+  initTimer(state, { startTime, project }) {
     if (!(startTime instanceof Date)) {
       throw new TypeError(
         `Given startTime is an instance of ${Object.getPrototypeOf(
@@ -12,18 +24,23 @@ export const mutations = {
         )} should be a Date instace`
       )
     }
-    state.startTime = startTime
-    state.running = true
+    state[project] = {
+      startTime,
+      running: true,
+    }
   },
-  resetTimer(state) {
-    state.startTime = null
-    state.running = false
+  resetTimer(state, { project }) {
+    state[project] = {
+      startTime: null,
+      running: false,
+    }
   },
 }
 
 export const actions = {
-  async getRunningEntry({ commit, rootGetters }) {
-    if (!rootGetters['userdata/meditationSettingExists']) {
+  async getRunningEntry({ commit, rootGetters }, { project }) {
+    const config = rootGetters['userdata/projectConfig'](project)
+    if (!config) {
       return null
     }
     try {
@@ -31,7 +48,7 @@ export const actions = {
         'https://api.track.toggl.com/api/v8/time_entries/current',
         {
           auth: {
-            username: rootGetters['userdata/meditationSetting'].apiKey,
+            username: config.apiKey,
             password: 'api_token',
           },
         }
@@ -42,12 +59,9 @@ export const actions = {
         return null
       }
 
-      // found running meditation
-      if (
-        result.data.wid === rootGetters['userdata/meditationSetting'].wid &&
-        result.data.pid === rootGetters['userdata/meditationSetting'].pid
-      ) {
-        commit('initTimerWith', new Date(result.data.start))
+      // found running project
+      if (result.data.wid === config.wid && result.data.pid === config.pid) {
+        commit('initTimer', { project, startTime: new Date(result.data.start) })
         return result
       }
 
@@ -57,12 +71,13 @@ export const actions = {
       throw new Error(`toggl API results error ${error.response.status}`)
     }
   },
-  async startTimer({ commit, dispatch, rootGetters }) {
-    if (!rootGetters['userdata/meditationSettingExists']) {
+  async startTimer({ commit, dispatch, rootGetters }, { project }) {
+    const config = rootGetters['userdata/projectConfig'](project)
+    if (!config) {
       return null
     }
     try {
-      const result = await dispatch('getRunningEntry')
+      const result = await dispatch('getRunningEntry', { project })
 
       if (result) {
         throw new Error(
@@ -77,29 +92,30 @@ export const actions = {
       'https://api.track.toggl.com/api/v8/time_entries/start',
       {
         time_entry: {
-          description: 'Meditaion(vitality app)',
+          description: `${project}(vitality app)`,
           start: new Date().toISOString(),
-          pid: rootGetters['userdata/meditationSetting'].pid,
-          wid: rootGetters['userdata/meditationSetting'].wid,
+          pid: config.pid,
+          wid: config.wid,
           created_with: 'Vitality',
         },
       },
       {
         auth: {
-          username: rootGetters['userdata/meditationSetting'].apiKey,
+          username: config.apiKey,
           password: 'api_token',
         },
         headers: { 'Content-Type': 'application/json' },
       }
     )
-    commit('initTimerWith', new Date(result.data.start))
+    commit('initTimer', { project, startTime: new Date(result.data.start) })
   },
-  async stopTimer({ commit, dispatch, rootGetters }) {
-    if (!rootGetters['userdata/meditationSettingExists']) {
+  async stopTimer({ commit, dispatch, rootGetters }, { project }) {
+    const config = rootGetters['userdata/projectConfig'](project)
+    if (!config) {
       return null
     }
     try {
-      const result = await dispatch('getRunningEntry')
+      const result = await dispatch('getRunningEntry', { project })
       if (!result) {
         return
       }
@@ -108,7 +124,7 @@ export const actions = {
         {},
         {
           auth: {
-            username: rootGetters['userdata/meditationSetting'].apiKey,
+            username: config.apiKey,
             password: 'api_token',
           },
           headers: { 'Content-Type': 'application/json' },
@@ -118,6 +134,6 @@ export const actions = {
       throw new Error(error.message)
     }
 
-    commit('resetTimer')
+    commit('resetTimer', { project })
   },
 }

@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-alert
-      v-if="!meditationSettingExists"
+      v-if="!projectConfig('meditation')"
       type="warning"
       colored-border
       border="left"
@@ -34,17 +34,17 @@
               color="deep-orange"
             >
               <v-btn
-                v-if="running"
+                v-if="meditation.running"
                 fab
-                :disabled="!meditationSettingExists"
+                :disabled="!projectConfig('meditation')"
                 @click="stop"
               >
                 <v-icon>mdi-stop</v-icon>
               </v-btn>
               <v-btn
-                v-if="!running"
+                v-if="!meditation.running"
                 fab
-                :disabled="!meditationSettingExists"
+                :disabled="!projectConfig('meditation')"
                 @click="start"
               >
                 <v-icon>mdi-play</v-icon>
@@ -85,8 +85,8 @@ export default {
     }
   },
   computed: {
-    ...mapState('meditation/timer', ['startTime', 'running']),
-    ...mapGetters('userdata', ['meditationSettingExists']),
+    ...mapState('timer', ['meditation']),
+    ...mapGetters('userdata', ['projectConfig']),
     durationMMSS() {
       const m = Math.floor(this.duration / 1000 / 60)
       const paddingM = m > 99 ? m : `0${m}`.slice(-2)
@@ -96,10 +96,10 @@ export default {
     },
   },
   watch: {
-    running(val, old) {
+    'meditation.running'(val, old) {
       if (!old && val) {
         this.intervalId = setInterval(() => {
-          this.duration = Date.now() - this.startTime
+          this.duration = Date.now() - this.meditation.startTime
         }, 1000)
       } else if (!val) {
         this.duration = 0
@@ -108,11 +108,11 @@ export default {
   },
   methods: {
     async start() {
-      await this.$store.dispatch('meditation/timer/startTimer')
+      await this.$store.dispatch('timer/startTimer', { project: 'meditation' })
     },
     async stop() {
       clearInterval(this.intervalId)
-      await this.$store.dispatch('meditation/timer/stopTimer')
+      await this.$store.dispatch('timer/stopTimer', { project: 'meditation' })
       await this.$store.dispatch('meditation/fetchWeekTotal')
     },
   },

@@ -38,12 +38,12 @@ type Settings {
 }
 
 type Toggl {
-  apiKey: String
-  focus: TogglIdSet
-  meditation: TogglIdSet
+  apiKey: String!
+  projects: [TogglProject]
 }
 
-type TogglIdSet {
+type TogglProject {
+  name: String
   pid: Int
   wid: Int
 }
@@ -68,13 +68,13 @@ input ExerciseInput {
   achievements: [AchievementInput]
 }
 
-input TogglIdSetInput {
-  pid: Int
-  wid: Int
-}
-
 input TogglInput {
   apiKey: String
-  focus: TogglIdSetInput
-  meditation: TogglIdSetInput
+  projects: [TogglProjectInput]
+}
+
+input TogglProjectInput {
+  name: String
+  pid: Int
+  wid: Int
 }

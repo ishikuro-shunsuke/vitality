@@ -6,14 +6,18 @@ export const state = () => ({
   settings: {
     toggl: {
       apiKey: '',
-      meditation: {
-        wid: '',
-        pid: '',
-      },
-      focus: {
-        wid: '',
-        pid: '',
-      },
+      projects: [
+        {
+          name: 'meditation',
+          wid: '',
+          pid: '',
+        },
+        {
+          name: 'focus',
+          wid: '',
+          pid: '',
+        },
+      ],
     },
   },
   cache: {
@@ -24,6 +28,21 @@ export const state = () => ({
 })
 
 export const getters = {
+  projectConfig(state) {
+    return (key) => {
+      const project = state.settings.toggl.projects.find((p) => p.name === key)
+      if (state.settings.toggl.apiKey && project?.wid && project?.pid) {
+        return {
+          apiKey: state.settings.toggl.apiKey,
+          wid: project.wid,
+          pid: project.pid,
+        }
+      } else {
+        return null
+      }
+    }
+  },
+  /*
   meditationSettingExists(state) {
     return !!(
       state.settings.toggl.apiKey &&
@@ -52,6 +71,7 @@ export const getters = {
       pid: state.settings.toggl.focus.pid,
     }
   },
+  */
 }
 
 export const mutations = {
@@ -64,15 +84,43 @@ export const mutations = {
 }
 
 export const actions = {
-  async saveTogglSettings({ state, commit }, { apiKey, meditation, focus }) {
+  async saveTogglSettings({ state, commit }, { apiKey, projects }) {
     commit('setSettings', {
       key: 'toggl',
-      value: { apiKey, meditation, focus },
+      value: { apiKey, projects },
     })
     try {
       await API.graphql({
         query: gqlMutations.saveTogglSettings,
         variables: { input: state.settings.toggl },
+      })
+    } catch (error) {
+      throw new Error(error.errors[0].message)
+    }
+  },
+
+  async removeTogglSettings({ state, commit }) {
+    commit('setSettings', {
+      key: 'toggl',
+      value: {
+        apiKey: '',
+        projects: [
+          {
+            name: 'meditation',
+            wid: '',
+            pid: '',
+          },
+          {
+            name: 'focus',
+            wid: '',
+            pid: '',
+          },
+        ],
+      },
+    })
+    try {
+      await API.graphql({
+        query: gqlMutations.removeTogglSettings,
       })
     } catch (error) {
       throw new Error(error.errors[0].message)

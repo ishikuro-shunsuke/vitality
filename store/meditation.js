@@ -18,7 +18,8 @@ export const mutations = {
 
 export const actions = {
   async fetchWeekTotal({ commit, rootGetters }) {
-    if (!rootGetters['userdata/meditationSettingExists']) {
+    const config = rootGetters['userdata/projectConfig']('meditation')
+    if (!config) {
       return
     }
 
@@ -27,12 +28,12 @@ export const actions = {
         'https://api.track.toggl.com/reports/api/v2/weekly',
         {
           auth: {
-            username: rootGetters['userdata/meditationSetting'].apiKey,
+            username: config.apiKey,
             password: 'api_token',
           },
           params: {
-            workspace_id: rootGetters['userdata/meditationSetting'].wid,
-            project_ids: rootGetters['userdata/meditationSetting'].pid,
+            workspace_id: config.wid,
+            project_ids: config.pid,
             user_agent: UA,
           },
         }

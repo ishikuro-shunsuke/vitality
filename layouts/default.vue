@@ -78,7 +78,7 @@ export default {
     this.$store.dispatch('vitality/fetchEmissions')
     await this.$store.dispatch('userdata/fetchUserData')
     await Promise.all([
-      this.$store.dispatch('meditation/timer/getRunningEntry'),
+      this.$store.dispatch('timer/getRunningEntry', { project: 'meditation' }),
       this.$store.dispatch('meditation/fetchWeekTotal'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
