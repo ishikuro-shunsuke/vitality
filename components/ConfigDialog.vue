@@ -18,6 +18,9 @@
             :rules="apiKeyRules"
           ></v-text-field>
         </v-card-text>
+        <v-card-text>
+          <a href="https://track.toggl.com/projects"> Select projects </a>
+        </v-card-text>
         <v-card-subtitle>Meditaiton</v-card-subtitle>
         <v-card-text>
           <v-text-field

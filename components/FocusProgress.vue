@@ -4,6 +4,9 @@
       {{ durationHMMSS }}
     </v-progress-linear>
     <v-card-actions>
+      <v-btn icon @click="openTogglReport">
+        <v-icon>mdi-chart-box</v-icon>
+      </v-btn>
       <v-text-field
         v-model="taskName"
         :label="projectName"
@@ -31,6 +34,7 @@ export default {
   computed: {
     ...mapState('focus', ['yearlyTotal', 'projectName', 'recentTaskName']),
     ...mapState('timer', ['focus']),
+    ...mapState('userdata', ['settings']),
     ...mapGetters('userdata', ['projectConfig']),
     color() {
       return this.percentile >= 100
@@ -84,6 +88,18 @@ export default {
         await this.$store.dispatch('timer/stopTimer', { project: 'focus' })
         await this.$store.dispatch('focus/fetchSummary')
       }
+    },
+    openTogglReport() {
+      const config = this.settings.toggl.projects.find(
+        (p) => p.name === 'focus'
+      )
+      if (!config) {
+        return
+      }
+      window.open(
+        `https://track.toggl.com/reports/summary/${config.wid}/period/thisYear/projects/${config.pid}`,
+        '_blank'
+      )
     },
   },
 }
