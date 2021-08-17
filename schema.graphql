@@ -26,15 +26,22 @@ type Mutation {
   removeTogglSettings(profile: String): User
   saveExerciseCache(input: ExerciseInput!, profile: String): Exercise
   saveTogglSettings(input: TogglInput!, profile: String): Toggl
+  stimulate(profile: String, timezone: String): Int!
 }
 
 type Query {
   emission(profile: String): Emissions!
+  stimulation(profile: String): [Stimulation]!
   user(profile: String): User!
 }
 
 type Settings {
   toggl: Toggl
+}
+
+type Stimulation {
+  count: Int
+  date: AWSDate
 }
 
 type Toggl {

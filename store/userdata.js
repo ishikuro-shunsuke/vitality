@@ -42,36 +42,6 @@ export const getters = {
       }
     }
   },
-  /*
-  meditationSettingExists(state) {
-    return !!(
-      state.settings.toggl.apiKey &&
-      state.settings.toggl.meditation.wid &&
-      state.settings.toggl.meditation.pid
-    )
-  },
-  focusSettingExists(state) {
-    return !!(
-      state.settings.toggl.apiKey &&
-      state.settings.toggl.focus.wid &&
-      state.settings.toggl.focus.pid
-    )
-  },
-  meditationSetting(state) {
-    return {
-      apiKey: state.settings.toggl.apiKey,
-      wid: state.settings.toggl.meditation.wid,
-      pid: state.settings.toggl.meditation.pid,
-    }
-  },
-  focusSetting(state) {
-    return {
-      apiKey: state.settings.toggl.apiKey,
-      wid: state.settings.toggl.focus.wid,
-      pid: state.settings.toggl.focus.pid,
-    }
-  },
-  */
 }
 
 export const mutations = {

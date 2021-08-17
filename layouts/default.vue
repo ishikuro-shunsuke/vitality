@@ -26,6 +26,9 @@
           <v-col cols="12" sm="6">
             <FocusProgress></FocusProgress>
           </v-col>
+          <v-col cols="12" sm="6">
+            <StimulationCounter></StimulationCounter>
+          </v-col>
         </v-row>
 
         <v-row>
@@ -70,6 +73,7 @@ import MeditationProgress from '../components/meditation/Progress'
 import ExerciseProgress from '../components/exercise/Progress'
 import FocusProgress from '../components/FocusProgress'
 import ConfigDialog from '../components/ConfigDialog'
+import StimulationCounter from '~/components/StimulationCounter.vue'
 
 export default {
   components: {
@@ -78,6 +82,7 @@ export default {
     ExerciseProgress,
     FocusProgress,
     ConfigDialog,
+    StimulationCounter,
   },
   data() {
     return {
@@ -93,6 +98,7 @@ export default {
       this.$store.dispatch('meditation/fetchWeekTotal'),
       this.$store.dispatch('focus/fetchSummary'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
+      this.$store.dispatch('dopamine/fetchStimulations'),
     ])
     const focus = await this.$store.dispatch('timer/getRunningEntry', {
       project: 'focus',

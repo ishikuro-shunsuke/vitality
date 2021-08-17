@@ -14,7 +14,13 @@
         dark
       ></v-text-field>
       <v-btn icon @click="action">
-        <v-icon>{{ focus.running ? 'mdi-stop' : 'mdi-play' }}</v-icon>
+        <v-icon>
+          {{
+            focus.running
+              ? 'mdi-stop-circle-outline'
+              : 'mdi-play-circle-outline'
+          }}
+        </v-icon>
       </v-btn>
     </v-card-actions>
   </v-card>
