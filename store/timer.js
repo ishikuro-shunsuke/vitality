@@ -10,12 +10,6 @@ export const state = () => ({
 })
 
 export const mutations = {
-  setProjectState(state, { project, params }) {
-    const n = { ...params, name: project }
-    state.projects = [
-      ...state.projects.map((p) => (p.name === project ? n : p)),
-    ]
-  },
   initTimer(state, { startTime, project }) {
     if (!(startTime instanceof Date)) {
       throw new TypeError(
@@ -62,7 +56,7 @@ export const actions = {
       // found running project
       if (result.data.wid === config.wid && result.data.pid === config.pid) {
         commit('initTimer', { project, startTime: new Date(result.data.start) })
-        return result
+        return result.data
       }
 
       // found other running project
@@ -71,7 +65,10 @@ export const actions = {
       throw new Error(`toggl API results error ${error.response.status}`)
     }
   },
-  async startTimer({ commit, dispatch, rootGetters }, { project }) {
+  async startTimer(
+    { commit, dispatch, rootGetters },
+    { project, description = undefined }
+  ) {
     const config = rootGetters['userdata/projectConfig'](project)
     if (!config) {
       return null
@@ -92,7 +89,7 @@ export const actions = {
       'https://api.track.toggl.com/api/v8/time_entries/start',
       {
         time_entry: {
-          description: `${project}(vitality app)`,
+          description: description || `${project}(vitality app)`,
           start: new Date().toISOString(),
           pid: config.pid,
           wid: config.wid,
@@ -120,7 +117,7 @@ export const actions = {
         return
       }
       await this.$axios.$put(
-        `https://api.track.toggl.com/api/v8/time_entries/${result.data.id}/stop`,
+        `https://api.track.toggl.com/api/v8/time_entries/${result.id}/stop`,
         {},
         {
           auth: {

@@ -21,6 +21,13 @@
             <ConfigDialog></ConfigDialog>
           </v-col>
         </v-row>
+
+        <v-row>
+          <v-col cols="12" sm="6">
+            <FocusProgress></FocusProgress>
+          </v-col>
+        </v-row>
+
         <v-row>
           <v-col cols="12" sm="4" class="pl-0 pr-0">
             <VitalityProgress></VitalityProgress>
@@ -32,7 +39,8 @@
             <ExerciseProgress></ExerciseProgress>
           </v-col>
         </v-row>
-        <v-row class="mt-10">
+
+        <v-row>
           <v-tabs id="detail" v-model="tab" grow :color="color">
             <v-tab nuxt :to="{ path: '/', hash: 'detail' }">Vitality</v-tab>
             <v-tab nuxt :to="{ path: '/meditation', hash: 'detail' }">
@@ -60,6 +68,7 @@ import { mapState, mapMutations } from 'vuex'
 import VitalityProgress from '../components/vitality/Progress'
 import MeditationProgress from '../components/meditation/Progress'
 import ExerciseProgress from '../components/exercise/Progress'
+import FocusProgress from '../components/FocusProgress'
 import ConfigDialog from '../components/ConfigDialog'
 
 export default {
@@ -67,6 +76,7 @@ export default {
     VitalityProgress,
     MeditationProgress,
     ExerciseProgress,
+    FocusProgress,
     ConfigDialog,
   },
   data() {
@@ -79,9 +89,17 @@ export default {
     await this.$store.dispatch('userdata/fetchUserData')
     await Promise.all([
       this.$store.dispatch('timer/getRunningEntry', { project: 'meditation' }),
+      this.$store.dispatch('timer/getRunningEntry', { project: 'focus' }),
       this.$store.dispatch('meditation/fetchWeekTotal'),
+      this.$store.dispatch('focus/fetchSummary'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
     ])
+    const focus = await this.$store.dispatch('timer/getRunningEntry', {
+      project: 'focus',
+    })
+    if (focus) {
+      this.$store.commit('focus/setRecentTaskName', focus.description)
+    }
     if (await this.$store.dispatch('exercise/checkAuthStatus')) {
       this.$store.commit('exercise/loggedIn')
     } else {
