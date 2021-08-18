@@ -10,7 +10,6 @@ export const state = () => ({
 export const mutations = {
   addStimulations(state, stimulations) {
     state.stimulation = stimulations
-    console.log(state.stimulation)
 
     const now = new Date()
     const paddingMM = `0${now.getMonth() + 1}`.slice(-2)

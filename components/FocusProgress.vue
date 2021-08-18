@@ -54,7 +54,8 @@ export default {
     },
     percentile() {
       return (
-        ((this.yearlyTotal + this.ongoingDuration) / (2000 * 60 * 60 * 1000)) *
+        ((this.yearlyTotal + this.ongoingDuration) /
+          (this.settings.focusEstimated * 60 * 60 * 1000)) *
         100
       )
     },

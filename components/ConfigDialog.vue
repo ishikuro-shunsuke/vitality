@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="hiding" max-width="600px">
+  <v-dialog v-model="show" max-width="600px">
     <template #activator="{ on, attrs }">
       <v-icon large color="grey" v-bind="attrs" v-on="on"> mdi-cog </v-icon>
     </template>
@@ -46,12 +46,18 @@
             label="Project ID"
             :rules="numberRules"
           ></v-text-field>
+          <v-text-field
+            v-model="input.focusEstimated"
+            label="Estimated Hours"
+            :rules="numberRules"
+          ></v-text-field>
         </v-card-text>
         <v-card-actions>
           <v-btn :disabled="!valid" text color="red" @click="reset">
             Remove
           </v-btn>
           <v-spacer></v-spacer>
+          <v-btn text @click="show = false">Cancel</v-btn>
           <v-btn :disabled="!valid" text @click="save">Save</v-btn>
           <v-progress-circular
             v-if="saving"
@@ -70,7 +76,7 @@ import { mapState } from 'vuex'
 export default {
   data() {
     return {
-      hiding: false,
+      show: false,
       valid: true,
       input: {
         togglApiKey: null,
@@ -78,6 +84,7 @@ export default {
         meditationPid: null,
         focusWid: null,
         focusPid: null,
+        focusEstimated: 2000,
       },
       apiKeyRules: [(v) => !!v || 'API Key is required'],
       numberRules: [(v) => /^\d+$/.test(v) || 'ID must be number'],
@@ -88,8 +95,8 @@ export default {
     ...mapState('userdata', ['settings']),
   },
   watch: {
-    hiding(_, newVal) {
-      if (!newVal) {
+    show(newVal, _) {
+      if (newVal) {
         const meditation = {
           ...this.settings.toggl.projects.find((p) => p.name === 'meditation'),
         }
@@ -102,6 +109,7 @@ export default {
           meditationPid: meditation.pid,
           focusWid: focus.wid,
           focusPid: focus.pid,
+          focusEstimated: this.settings.focusEstimated,
         }
       }
     },
@@ -123,6 +131,9 @@ export default {
             pid: this.input.focusPid,
           },
         ],
+      })
+      await this.$store.dispatch('userdata/saveFocusEstimated', {
+        hours: this.input.focusEstimated,
       })
       this.saving = false
     },

@@ -19,6 +19,7 @@ export const state = () => ({
         },
       ],
     },
+    focusEstimated: 2000,
   },
   cache: {
     exercise: {
@@ -69,7 +70,7 @@ export const actions = {
     }
   },
 
-  async removeTogglSettings({ state, commit }) {
+  async removeTogglSettings({ commit }) {
     commit('setSettings', {
       key: 'toggl',
       value: {
@@ -97,6 +98,18 @@ export const actions = {
     }
   },
 
+  async saveFocusEstimated({ state, commit }, { hours }) {
+    commit('setSettings', { key: 'focusEstimated', value: hours })
+    try {
+      await API.graphql({
+        query: gqlMutations.saveFocusEstimated,
+        variables: { hours: state.settings.focusEstimated },
+      })
+    } catch (error) {
+      throw new Error(error.errors[0].message)
+    }
+  },
+
   async saveExerciseCache({ state, commit }, { achievements }) {
     commit('setCache', { key: 'exercise', value: { achievements } })
     try {
@@ -114,6 +127,12 @@ export const actions = {
       const user = (await API.graphql({ query: gqlQueries.user })).data.user
       if (user.settings?.toggl) {
         commit('setSettings', { key: 'toggl', value: user.settings.toggl })
+      }
+      if (user.settings?.focusEstimated) {
+        commit('setSettings', {
+          key: 'focusEstimated',
+          value: user.settings.focusEstimated,
+        })
       }
 
       // TODO: test this condition

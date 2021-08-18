@@ -25,6 +25,7 @@ type Mutation {
   emit(profile: String): AWSTimestamp!
   removeTogglSettings(profile: String): User
   saveExerciseCache(input: ExerciseInput!, profile: String): Exercise
+  saveFocusEstimated(hours: Int!, profile: String): Int!
   saveTogglSettings(input: TogglInput!, profile: String): Toggl
   stimulate(profile: String, timezone: String): Int!
 }
@@ -36,6 +37,7 @@ type Query {
 }
 
 type Settings {
+  focusEstimated: Int
   toggl: Toggl
 }
 
