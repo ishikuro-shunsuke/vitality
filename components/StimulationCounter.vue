@@ -1,19 +1,15 @@
 <template>
   <v-card @click="stimulate">
     <v-card-text>
-      <v-row>
-        <v-col cols="9">
-          <LineChart
-            :height="79"
-            :chart-data="chartData"
-            :options="options"
-          ></LineChart>
-        </v-col>
-        <v-col cols="3" class="text-h3 d-flex align-right align-center">
-          <v-icon size="50" color="pink"> mdi-head-snowflake </v-icon>
-          {{ today }}
-        </v-col>
-      </v-row>
+      <LineChart
+        :height="79"
+        :chart-data="chartData"
+        :options="options"
+      ></LineChart>
+      <v-overlay absolute class="text-h3">
+        <v-icon size="50" color="pink"> mdi-head-snowflake </v-icon>
+        {{ today }}
+      </v-overlay>
     </v-card-text>
   </v-card>
 </template>
