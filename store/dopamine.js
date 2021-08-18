@@ -34,12 +34,9 @@ export const actions = {
       const result = await API.graphql({ query: gqlQueries.stimulation })
       commit('setStimulations', result.data.stimulation)
 
-      const now = new Date()
-      const paddingMM = `0${now.getMonth() + 1}`.slice(-2)
-      const paddingDD = `0${now.getDate()}`.slice(-2)
-      const yyyyMMdd = `${now.getFullYear()}-${paddingMM}-${paddingDD}`
+      const yyyymmdd = this.$toyyyymmdd(new Date())
       const todaysCount =
-        result.data.stimulation.find((s) => s.date === yyyyMMdd)?.count || 0
+        result.data.stimulation.find((s) => s.date === yyyymmdd)?.count || 0
       commit('setTodaysCount', todaysCount)
     } catch (error) {
       throw new Error(error.message)
@@ -50,7 +47,7 @@ export const actions = {
       next: ({ value }) => {
         commit('setTodaysCount', value.data.stimulated)
       },
-      error: (error) => console.warn(error),
+      error: (error) => commit('print', error, { root: true }),
     })
   },
 }

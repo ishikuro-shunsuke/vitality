@@ -24,10 +24,10 @@
 
         <v-row>
           <v-col cols="12" sm="6">
-            <FocusProgress></FocusProgress>
+            <StimulationCounter></StimulationCounter>
           </v-col>
           <v-col cols="12" sm="6">
-            <StimulationCounter></StimulationCounter>
+            <FocusProgress></FocusProgress>
           </v-col>
         </v-row>
 
@@ -91,14 +91,14 @@ export default {
   },
   async fetch() {
     this.$store.dispatch('vitality/fetchEmissions')
+    this.$store.dispatch('dopamine/fetchStimulations')
+    this.$store.dispatch('dopamine/subscribeStimulations')
     await this.$store.dispatch('userdata/fetchUserData')
     await Promise.all([
       this.$store.dispatch('timer/getRunningEntry', { project: 'meditation' }),
-      this.$store.dispatch('timer/getRunningEntry', { project: 'focus' }),
       this.$store.dispatch('meditation/fetchWeekTotal'),
       this.$store.dispatch('focus/fetchSummary'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
-      this.$store.dispatch('dopamine/subscribeStimulations'),
     ])
     const focus = await this.$store.dispatch('timer/getRunningEntry', {
       project: 'focus',
