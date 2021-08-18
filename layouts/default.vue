@@ -98,7 +98,7 @@ export default {
       this.$store.dispatch('meditation/fetchWeekTotal'),
       this.$store.dispatch('focus/fetchSummary'),
       this.$store.dispatch('exercise/fetchWeeklyReport'),
-      this.$store.dispatch('dopamine/fetchStimulations'),
+      this.$store.dispatch('dopamine/subscribeStimulations'),
     ])
     const focus = await this.$store.dispatch('timer/getRunningEntry', {
       project: 'focus',
