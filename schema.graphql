@@ -1,6 +1,7 @@
 ﻿schema {
   query: Query
   mutation: Mutation
+  subscription: Subscription
 }
 
 type Achievement {
@@ -44,6 +45,10 @@ type Settings {
 type Stimulation {
   count: Int
   date: AWSDate
+}
+
+type Subscription {
+  stimulated: Int @aws_subscribe(mutations : ["stimulate"])
 }
 
 type Toggl {

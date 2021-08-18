@@ -8,9 +8,7 @@
         height="80"
       ></v-sparkline>
       {{ today }}
-      <v-icon size="50">
-        {{ pending ? 'mdi-head-sync' : 'mdi-head-snowflake' }}
-      </v-icon>
+      <v-icon size="50"> mdi-head-snowflake </v-icon>
     </v-card-text>
   </v-card>
 </template>
@@ -32,10 +30,8 @@ export default {
     },
   },
   methods: {
-    async stimulate() {
-      this.pending = true
-      await this.$store.dispatch('dopamine/stimulate')
-      this.pending = false
+    stimulate() {
+      this.$store.dispatch('dopamine/stimulate')
     },
   },
 }
