@@ -15,6 +15,15 @@ export const mutations = {
 
   setTodaysCount(state, count) {
     state.today = count
+
+    const today = this.$toyyyymmdd(new Date())
+    const i = state.stimulation.findIndex((i) => i.date === today)
+    const e = { date: today, count }
+    if (i >= 0) {
+      this._vm.$set(state.stimulation, i, e)
+    } else {
+      state.stimulation.push(e)
+    }
   },
 }
 
@@ -33,21 +42,22 @@ export const actions = {
     try {
       const result = await API.graphql({ query: gqlQueries.stimulation })
       commit('setStimulations', result.data.stimulation)
-
-      const yyyymmdd = this.$toyyyymmdd(new Date())
+      const today = this.$toyyyymmdd(new Date())
       const todaysCount =
-        result.data.stimulation.find((s) => s.date === yyyymmdd)?.count || 0
+        result.data.stimulation.find((i) => i.date === today)?.count || 0
       commit('setTodaysCount', todaysCount)
     } catch (error) {
       throw new Error(error.message)
     }
   },
-  subscribeStimulations({ commit }) {
+  subscribeStimulations({ commit, dispatch }) {
     API.graphql(graphqlOperation(gqlSubscriptions.stimulated)).subscribe({
       next: ({ value }) => {
         commit('setTodaysCount', value.data.stimulated)
       },
-      error: (error) => commit('print', error, { root: true }),
+      error: (_) => {
+        dispatch('fetchStimulations')
+      },
     })
   },
 }
